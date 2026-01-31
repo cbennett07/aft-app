@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="288dp"
+    android:height="288dp"
+    android:viewportWidth="288"
+    android:viewportHeight="288">
+
+    <!-- Dark background -->
+    <path
+        android:fillColor="#1A1A1A"
+        android:pathData="M0,0h288v288h-288z"/>
+
+    <!-- Army Star Logo (centered) -->
+    <group
+        android:translateX="108"
+        android:translateY="111">
+        <path
+            android:fillColor="#FFD200"
+            android:pathData="M70.8608 25.6761H44.3008L36.0984 0.411133L27.896 25.6761H1.33594L22.8184 41.2791L14.616 66.5441L36.0984 50.9411L57.5808 66.5441L49.3784 41.2791L70.8608 25.6761ZM36.0984 43.1704L26.5392 50.1188L30.1984 38.8739L20.6393 31.9255H32.4597L36.1189 20.6807L39.7782 31.9255H51.5986L42.0395 38.8739L45.6987 50.1188L36.0984 43.1704Z"/>
+    </group>
+
+</vector>
