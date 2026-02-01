@@ -455,13 +455,13 @@ fun ResultsScreen(
                                 )
                             ),
                             shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = "CANCEL",
-                                fontSize = 14.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                letterSpacing = 1.sp
+                                letterSpacing = 0.5.sp
                             )
                         }
 
@@ -554,7 +554,7 @@ fun ResultsScreen(
                                 contentColor = ArmyBlack
                             ),
                             shape = RoundedCornerShape(8.dp),
-                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 4.dp)
                         ) {
                             if (isGenerating) {
                                 CircularProgressIndicator(
@@ -565,9 +565,9 @@ fun ResultsScreen(
                             } else {
                                 Text(
                                     text = "GENERATE",
-                                    fontSize = 14.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
-                                    letterSpacing = 1.sp
+                                    letterSpacing = 0.5.sp
                                 )
                             }
                         }
