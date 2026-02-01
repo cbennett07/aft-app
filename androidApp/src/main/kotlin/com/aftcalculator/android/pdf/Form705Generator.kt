@@ -100,8 +100,16 @@ object Form705Generator {
                 android.util.Log.w("Form705", "No AcroForm found")
             }
 
-            // Save to cache directory
-            val outputFile = File(context.cacheDir, "DA_Form_705_${System.currentTimeMillis()}.pdf")
+            // Save to cache directory with soldier name and date
+            val dateFormat = SimpleDateFormat("yyyyMMdd", Locale.US)
+            val fileDate = dateFormat.format(data.testDate)
+
+            // Parse soldier name (expected format: "Last, First, MI" or "Last, First")
+            val nameParts = data.soldierName.split(",").map { it.trim() }
+            val lastName = nameParts.getOrNull(0)?.uppercase()?.replace(" ", "_") ?: "UNKNOWN"
+            val firstInitial = nameParts.getOrNull(1)?.firstOrNull()?.uppercaseChar() ?: 'X'
+
+            val outputFile = File(context.cacheDir, "DA_Form_705_${lastName}_${firstInitial}_${fileDate}.pdf")
             android.util.Log.d("Form705", "Saving PDF to: ${outputFile.absolutePath}")
 
             // Use OutputStream for more control
