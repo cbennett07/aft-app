@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -52,9 +53,17 @@ fun ResultsScreen(
     var soldierName by remember { mutableStateOf("") }
     var unitLocation by remember { mutableStateOf("") }
     var mos by remember { mutableStateOf("") }
-    var payGrade by remember { mutableStateOf("") }
+    var payGrade by remember { mutableStateOf("E-4") }
+    var payGradeExpanded by remember { mutableStateOf(false) }
     var graderName by remember { mutableStateOf("") }
     var isGenerating by remember { mutableStateOf(false) }
+
+    // Pay grades E-1 to O-10
+    val payGrades = listOf(
+        "E-1", "E-2", "E-3", "E-4", "E-5", "E-6", "E-7", "E-8", "E-9",
+        "W-1", "W-2", "W-3", "W-4", "W-5",
+        "O-1", "O-2", "O-3", "O-4", "O-5", "O-6", "O-7", "O-8", "O-9", "O-10"
+    )
 
     Box(
         modifier = modifier
@@ -76,7 +85,8 @@ fun ResultsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(ArmyBlack)
-                    .padding(horizontal = 8.dp, vertical = 12.dp),
+                    .statusBarsPadding()
+                    .padding(horizontal = 8.dp, vertical = 8.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -89,13 +99,20 @@ fun ResultsScreen(
                         )
                     }
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "AFT RESULTS",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = 2.sp
-                    )
+                    Column {
+                        Text(
+                            text = "AFT RESULTS",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 2.sp
+                        )
+                        Text(
+                            text = "${score.soldier.mosCategory.displayName} • Age ${score.soldier.age}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.White.copy(alpha = 0.6f)
+                        )
+                    }
                 }
                 IconButton(onClick = onReset) {
                     Icon(
@@ -136,6 +153,7 @@ fun ResultsScreen(
                 ) {
                     Text(
                         text = "GENERATE DA FORM 705",
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
@@ -146,13 +164,13 @@ fun ResultsScreen(
                 // Action Buttons
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     OutlinedButton(
                         onClick = onDismiss,
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp),
+                            .height(56.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.White
                         ),
@@ -161,10 +179,12 @@ fun ResultsScreen(
                                 listOf(Color.White.copy(alpha = 0.3f), Color.White.copy(alpha = 0.3f))
                             )
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "EDIT SCORES",
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -174,15 +194,17 @@ fun ResultsScreen(
                         onClick = onReset,
                         modifier = Modifier
                             .weight(1f)
-                            .height(48.dp),
+                            .height(56.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = ArmyGold,
                             contentColor = ArmyBlack
                         ),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
                             text = "START OVER",
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             letterSpacing = 1.sp
                         )
@@ -233,9 +255,9 @@ fun ResultsScreen(
                         InfoRow(
                             label = "Scoring type",
                             value = if (score.soldier.mosCategory == MosCategory.COMBAT) {
-                                "Sex-neutral"
+                                "Gender-neutral"
                             } else {
-                                "Sex and age-normed"
+                                "Gender and age-normed"
                             }
                         )
                     }
@@ -284,7 +306,8 @@ fun ResultsScreen(
                     OutlinedTextField(
                         value = soldierName,
                         onValueChange = { soldierName = it },
-                        label = { Text("Soldier Name (Last, First, MI)") },
+                        label = { Text("Soldier Name") },
+                        placeholder = { Text("Last, First, MI", color = Color.White.copy(alpha = 0.4f)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -340,22 +363,47 @@ fun ResultsScreen(
                             )
                         )
 
-                        OutlinedTextField(
-                            value = payGrade,
-                            onValueChange = { payGrade = it },
-                            label = { Text("Pay Grade") },
-                            singleLine = true,
-                            modifier = Modifier.weight(1f),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = ArmyGold,
-                                unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
-                                focusedTextColor = Color.White,
-                                unfocusedTextColor = Color.White,
-                                focusedLabelColor = ArmyGold,
-                                unfocusedLabelColor = Color.White.copy(alpha = 0.5f),
-                                cursorColor = ArmyGold
+                        ExposedDropdownMenuBox(
+                            expanded = payGradeExpanded,
+                            onExpandedChange = { payGradeExpanded = it },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            OutlinedTextField(
+                                value = payGrade,
+                                onValueChange = {},
+                                readOnly = true,
+                                label = { Text("Pay Grade") },
+                                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = payGradeExpanded) },
+                                singleLine = true,
+                                modifier = Modifier
+                                    .menuAnchor()
+                                    .fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedBorderColor = ArmyGold,
+                                    unfocusedBorderColor = Color.White.copy(alpha = 0.3f),
+                                    focusedTextColor = Color.White,
+                                    unfocusedTextColor = Color.White,
+                                    focusedLabelColor = ArmyGold,
+                                    unfocusedLabelColor = Color.White.copy(alpha = 0.5f),
+                                    focusedTrailingIconColor = ArmyGold,
+                                    unfocusedTrailingIconColor = Color.White.copy(alpha = 0.5f)
+                                )
                             )
-                        )
+                            ExposedDropdownMenu(
+                                expanded = payGradeExpanded,
+                                onDismissRequest = { payGradeExpanded = false }
+                            ) {
+                                payGrades.forEach { grade ->
+                                    DropdownMenuItem(
+                                        text = { Text(grade) },
+                                        onClick = {
+                                            payGrade = grade
+                                            payGradeExpanded = false
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -363,7 +411,8 @@ fun ResultsScreen(
                     OutlinedTextField(
                         value = graderName,
                         onValueChange = { graderName = it },
-                        label = { Text("Grader Name (Last, First, MI)") },
+                        label = { Text("Grader Name") },
+                        placeholder = { Text("Last, First, MI", color = Color.White.copy(alpha = 0.4f)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -389,11 +438,13 @@ fun ResultsScreen(
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         OutlinedButton(
                             onClick = { showForm705Dialog = false },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
                             enabled = !isGenerating,
                             colors = ButtonDefaults.outlinedButtonColors(
                                 contentColor = Color.White
@@ -402,9 +453,16 @@ fun ResultsScreen(
                                 brush = Brush.linearGradient(
                                     listOf(Color.White.copy(alpha = 0.3f), Color.White.copy(alpha = 0.3f))
                                 )
-                            )
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            Text("CANCEL")
+                            Text(
+                                text = "CANCEL",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 1.sp
+                            )
                         }
 
                         Button(
@@ -487,12 +545,16 @@ fun ResultsScreen(
                                     }
                                 }
                             },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(48.dp),
                             enabled = !isGenerating && soldierName.isNotBlank(),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = ArmyGold,
                                 contentColor = ArmyBlack
-                            )
+                            ),
+                            shape = RoundedCornerShape(8.dp),
+                            contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             if (isGenerating) {
                                 CircularProgressIndicator(
@@ -501,7 +563,12 @@ fun ResultsScreen(
                                     strokeWidth = 2.dp
                                 )
                             } else {
-                                Text("GENERATE")
+                                Text(
+                                    text = "GENERATE",
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    letterSpacing = 1.sp
+                                )
                             }
                         }
                     }

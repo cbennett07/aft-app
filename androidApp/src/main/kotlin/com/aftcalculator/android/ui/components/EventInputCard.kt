@@ -88,18 +88,51 @@ fun EventInputCard(
                 val filtered = newValue.filter { it.isDigit() }
                 onValueChange(filtered)
             }
-            AftEvent.SPRINT_DRAG_CARRY, AftEvent.PLANK, AftEvent.TWO_MILE_RUN,
-            AftEvent.WALK_2_5_MILE, AftEvent.ROW_5K, AftEvent.BIKE_12K, AftEvent.SWIM_1K -> {
-                // Allow digits and colon for time format
-                val filtered = newValue.filter { it.isDigit() || it == ':' }
-                // Auto-format: if user types 4 digits without colon, insert colon
-                val formatted = if (filtered.length == 4 && !filtered.contains(':')) {
-                    "${filtered.substring(0, 2)}:${filtered.substring(2)}"
-                } else if (filtered.length > 5) {
-                    // Limit to mm:ss format
-                    filtered.take(5)
-                } else {
-                    filtered
+            AftEvent.SPRINT_DRAG_CARRY, AftEvent.PLANK -> {
+                // SDC/Plank can be M:SS or MM:SS format
+                val digitsOnly = newValue.filter { it.isDigit() }.take(4)
+                val formatted = when (digitsOnly.length) {
+                    0 -> ""
+                    1, 2 -> digitsOnly // Wait for more input
+                    3 -> {
+                        // M:SS format (e.g., "145" -> "1:45")
+                        val seconds = digitsOnly.substring(1).toIntOrNull() ?: 0
+                        if (seconds <= 59) {
+                            "${digitsOnly[0]}:${digitsOnly.substring(1)}"
+                        } else {
+                            digitsOnly // Invalid seconds
+                        }
+                    }
+                    4 -> {
+                        // MM:SS format (e.g., "1030" -> "10:30")
+                        val seconds = digitsOnly.substring(2).toIntOrNull() ?: 0
+                        if (seconds <= 59) {
+                            "${digitsOnly.substring(0, 2)}:${digitsOnly.substring(2)}"
+                        } else {
+                            digitsOnly // Invalid seconds
+                        }
+                    }
+                    else -> digitsOnly.take(4)
+                }
+                onValueChange(formatted)
+            }
+            AftEvent.TWO_MILE_RUN, AftEvent.WALK_2_5_MILE, AftEvent.ROW_5K,
+            AftEvent.BIKE_12K, AftEvent.SWIM_1K -> {
+                // These events are always MM:SS format - only format at 4 digits
+                val digitsOnly = newValue.filter { it.isDigit() }.take(4)
+                val formatted = when (digitsOnly.length) {
+                    0 -> ""
+                    1, 2, 3 -> digitsOnly // Wait for 4 digits
+                    4 -> {
+                        // MM:SS format (e.g., "1415" -> "14:15")
+                        val seconds = digitsOnly.substring(2).toIntOrNull() ?: 0
+                        if (seconds <= 59) {
+                            "${digitsOnly.substring(0, 2)}:${digitsOnly.substring(2)}"
+                        } else {
+                            digitsOnly // Invalid seconds
+                        }
+                    }
+                    else -> digitsOnly.take(4)
                 }
                 onValueChange(formatted)
             }
@@ -395,11 +428,20 @@ fun AlternateAerobicCard(
                     OutlinedTextField(
                         value = timeValue,
                         onValueChange = { newValue ->
-                            val filtered = newValue.filter { it.isDigit() || it == ':' }
-                            val formatted = if (filtered.length == 4 && !filtered.contains(':')) {
-                                "${filtered.substring(0, 2)}:${filtered.substring(2)}"
-                            } else {
-                                filtered.take(5)
+                            // Alternate events are always MM:SS format - only format at 4 digits
+                            val digitsOnly = newValue.filter { it.isDigit() }.take(4)
+                            val formatted = when (digitsOnly.length) {
+                                0 -> ""
+                                1, 2, 3 -> digitsOnly // Wait for 4 digits
+                                4 -> {
+                                    val seconds = digitsOnly.substring(2).toIntOrNull() ?: 0
+                                    if (seconds <= 59) {
+                                        "${digitsOnly.substring(0, 2)}:${digitsOnly.substring(2)}"
+                                    } else {
+                                        digitsOnly
+                                    }
+                                }
+                                else -> digitsOnly.take(4)
                             }
                             onTimeChange(formatted)
                         },
