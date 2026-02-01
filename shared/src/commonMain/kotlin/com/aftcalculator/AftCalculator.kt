@@ -11,6 +11,7 @@ class AftCalculator {
         AftEvent.SPRINT_DRAG_CARRY to SprintDragCarryScorer,
         AftEvent.PLANK to PlankScorer,
         AftEvent.TWO_MILE_RUN to TwoMileRunScorer
+        // Alternate aerobic events handled specially (time-based pass/fail)
     )
 
     fun calculateScore(soldier: Soldier, inputs: List<EventInput>): AftScore {
@@ -22,15 +23,25 @@ class AftCalculator {
         val minPerEvent = 60
 
         for (input in inputs) {
-            val scorer = scorers[input.event]
-                ?: throw IllegalArgumentException("Unknown event: ${input.event}")
-
-            val points = scorer.calculateScore(
-                rawValue = input.value,
-                ageBracket = soldier.ageBracket,
-                gender = soldier.gender,
-                isCombatMos = isCombatMos
-            )
+            // Calculate points - handle alternate aerobic events specially
+            val points = if (input.event.isAlternateAerobic) {
+                AlternateAerobicScorer.calculateScore(
+                    event = input.event,
+                    timeInSeconds = input.value,
+                    ageBracket = soldier.ageBracket,
+                    gender = soldier.gender,
+                    isCombatMos = isCombatMos
+                )
+            } else {
+                val scorer = scorers[input.event]
+                    ?: throw IllegalArgumentException("Unknown event: ${input.event}")
+                scorer.calculateScore(
+                    rawValue = input.value,
+                    ageBracket = soldier.ageBracket,
+                    gender = soldier.gender,
+                    isCombatMos = isCombatMos
+                )
+            }
 
             // Each event must score at least 60 points
             val eventPassed = points >= minPerEvent
@@ -82,16 +93,27 @@ class AftCalculator {
         rawValue: Double,
         soldier: Soldier
     ): EventScore {
-        val scorer = scorers[event]
-            ?: throw IllegalArgumentException("Unknown event: $event")
-
         val isCombatMos = soldier.mosCategory == MosCategory.COMBAT
-        val points = scorer.calculateScore(
-            rawValue = rawValue,
-            ageBracket = soldier.ageBracket,
-            gender = soldier.gender,
-            isCombatMos = isCombatMos
-        )
+
+        // Calculate points - handle alternate aerobic events specially
+        val points = if (event.isAlternateAerobic) {
+            AlternateAerobicScorer.calculateScore(
+                event = event,
+                timeInSeconds = rawValue,
+                ageBracket = soldier.ageBracket,
+                gender = soldier.gender,
+                isCombatMos = isCombatMos
+            )
+        } else {
+            val scorer = scorers[event]
+                ?: throw IllegalArgumentException("Unknown event: $event")
+            scorer.calculateScore(
+                rawValue = rawValue,
+                ageBracket = soldier.ageBracket,
+                gender = soldier.gender,
+                isCombatMos = isCombatMos
+            )
+        }
 
         // Each event must score at least 60 points
         val passed = points >= 60

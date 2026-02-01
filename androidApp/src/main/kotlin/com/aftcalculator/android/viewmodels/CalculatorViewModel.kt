@@ -3,6 +3,7 @@ package com.aftcalculator.android.viewmodels
 import androidx.lifecycle.ViewModel
 import com.aftcalculator.AftCalculator
 import com.aftcalculator.models.*
+import com.aftcalculator.scoring.AlternateAerobicTables
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,6 +19,11 @@ data class CalculatorUiState(
     val sprintDragCarrySeconds: String = "",
     val plankSeconds: String = "",
     val twoMileRunSeconds: String = "",
+
+    // Alternate aerobic event
+    val useAlternateAerobic: Boolean = false,
+    val alternateAerobicEvent: AftEvent = AftEvent.WALK_2_5_MILE,
+    val alternateAerobicTime: String = "",
 
     // Medical exemptions
     val deadliftExempt: Boolean = false,
@@ -70,6 +76,23 @@ class CalculatorViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(twoMileRunSeconds = value)
     }
 
+    // Alternate aerobic event methods
+    fun toggleUseAlternateAerobic() {
+        _uiState.value = _uiState.value.copy(
+            useAlternateAerobic = !_uiState.value.useAlternateAerobic
+        )
+    }
+
+    fun setAlternateAerobicEvent(event: AftEvent) {
+        if (event.isAlternateAerobic) {
+            _uiState.value = _uiState.value.copy(alternateAerobicEvent = event)
+        }
+    }
+
+    fun updateAlternateAerobicTime(value: String) {
+        _uiState.value = _uiState.value.copy(alternateAerobicTime = value)
+    }
+
     // Exemption toggles
     fun toggleDeadliftExempt() {
         _uiState.value = _uiState.value.copy(deadliftExempt = !_uiState.value.deadliftExempt)
@@ -98,7 +121,12 @@ class CalculatorViewModel : ViewModel() {
             AftEvent.PUSH_UP -> state.pushUpExempt
             AftEvent.SPRINT_DRAG_CARRY -> state.sprintDragCarryExempt
             AftEvent.PLANK -> state.plankExempt
-            AftEvent.TWO_MILE_RUN -> state.twoMileRunExempt
+            AftEvent.TWO_MILE_RUN -> state.twoMileRunExempt || state.useAlternateAerobic
+            // Alternate aerobic events are exempt if not using alternate or using a different one
+            AftEvent.WALK_2_5_MILE,
+            AftEvent.ROW_5K,
+            AftEvent.BIKE_12K,
+            AftEvent.SWIM_1K -> !state.useAlternateAerobic || state.alternateAerobicEvent != event
         }
     }
 
@@ -136,8 +164,12 @@ class CalculatorViewModel : ViewModel() {
             }
         }
 
-        // Parse 2-mile run (if not exempt)
-        if (!state.twoMileRunExempt) {
+        // Parse 2-mile run OR alternate aerobic event
+        if (state.useAlternateAerobic) {
+            // Alternate aerobic: pass/fail determined by time vs official standards
+            val timeValue = parseTimeInput(state.alternateAerobicTime) ?: 0.0
+            inputs.add(EventInput(state.alternateAerobicEvent, timeValue))
+        } else if (!state.twoMileRunExempt) {
             parseTimeInput(state.twoMileRunSeconds)?.let {
                 inputs.add(EventInput(AftEvent.TWO_MILE_RUN, it))
             }
@@ -163,6 +195,11 @@ class CalculatorViewModel : ViewModel() {
             AftEvent.SPRINT_DRAG_CARRY -> parseTimeInput(state.sprintDragCarrySeconds)
             AftEvent.PLANK -> parseTimeInput(state.plankSeconds)
             AftEvent.TWO_MILE_RUN -> parseTimeInput(state.twoMileRunSeconds)
+            // Alternate aerobic events: use actual time (scorer checks vs standards)
+            AftEvent.WALK_2_5_MILE,
+            AftEvent.ROW_5K,
+            AftEvent.BIKE_12K,
+            AftEvent.SWIM_1K -> parseTimeInput(state.alternateAerobicTime)
         }
 
         return rawValue?.let { calculator.calculateSingleEvent(event, it, soldier) }
@@ -327,7 +364,35 @@ class CalculatorViewModel : ViewModel() {
                     }
                 }
             }
+            // Alternate aerobic events - show max passing time from official standards
+            AftEvent.WALK_2_5_MILE,
+            AftEvent.ROW_5K,
+            AftEvent.BIKE_12K,
+            AftEvent.SWIM_1K -> {
+                AlternateAerobicTables.formatMaxPassingTime(
+                    event = event,
+                    ageBracket = ageBracket,
+                    isMaleOrCombat = useMaleTable
+                )
+            }
         }
+    }
+
+    /**
+     * Get the max passing time for an alternate aerobic event.
+     * Returns formatted time string (mm:ss).
+     */
+    fun getAlternateMaxPassingTime(event: AftEvent): String {
+        val state = _uiState.value
+        val ageBracket = AgeBracket.fromAge(state.age)
+        val isCombat = state.mosCategory == MosCategory.COMBAT
+        val useMaleTable = isCombat || state.gender == Gender.MALE
+
+        return AlternateAerobicTables.formatMaxPassingTime(
+            event = event,
+            ageBracket = ageBracket,
+            isMaleOrCombat = useMaleTable
+        )
     }
 
     companion object {

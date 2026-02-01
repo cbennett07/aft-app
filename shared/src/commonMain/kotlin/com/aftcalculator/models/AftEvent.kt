@@ -8,7 +8,20 @@ enum class AftEvent(val displayName: String, val unit: String) {
     PUSH_UP("Hand-Release Push-Up", "reps"),
     SPRINT_DRAG_CARRY("Sprint-Drag-Carry", "time"),
     PLANK("Plank", "time"),
-    TWO_MILE_RUN("2-Mile Run", "time")
+    TWO_MILE_RUN("2-Mile Run", "time"),
+    // Alternate aerobic events (pass/fail = 60 points)
+    WALK_2_5_MILE("2.5-Mile Walk", "time"),
+    ROW_5K("5000-Meter Row", "time"),
+    BIKE_12K("12,000-Meter Bike", "time"),
+    SWIM_1K("1000-Meter Swim", "time");
+
+    val isAlternateAerobic: Boolean
+        get() = this in listOf(WALK_2_5_MILE, ROW_5K, BIKE_12K, SWIM_1K)
+
+    companion object {
+        val alternateAerobicEvents = listOf(WALK_2_5_MILE, ROW_5K, BIKE_12K, SWIM_1K)
+        val standardEvents = listOf(DEADLIFT, PUSH_UP, SPRINT_DRAG_CARRY, PLANK, TWO_MILE_RUN)
+    }
 }
 
 @Serializable

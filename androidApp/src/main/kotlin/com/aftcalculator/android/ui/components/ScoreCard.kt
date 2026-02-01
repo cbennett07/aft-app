@@ -252,5 +252,14 @@ private fun formatRawValue(eventScore: EventScore): String {
         AftEvent.SPRINT_DRAG_CARRY,
         AftEvent.PLANK,
         AftEvent.TWO_MILE_RUN -> CalculatorViewModel.formatTimeForDisplay(eventScore.rawValue)
+        // Alternate aerobic events - show pass/fail or time
+        AftEvent.WALK_2_5_MILE,
+        AftEvent.ROW_5K,
+        AftEvent.BIKE_12K,
+        AftEvent.SWIM_1K -> if (eventScore.rawValue > 0) {
+            CalculatorViewModel.formatTimeForDisplay(eventScore.rawValue)
+        } else {
+            "N/A"
+        }
     }
 }

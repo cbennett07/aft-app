@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.aftcalculator.android.ui.components.EventInputCard
+import com.aftcalculator.android.ui.components.AlternateAerobicCard
 import com.aftcalculator.android.ui.theme.ArmyGold
 import com.aftcalculator.android.ui.theme.ArmyBlack
 import com.aftcalculator.android.ui.theme.ArmyDarkGray
@@ -53,12 +54,37 @@ fun CalculatorScreen(
     val plankScore = remember(uiState.plankSeconds, uiState.age, uiState.gender, uiState.mosCategory) {
         viewModel.calculateSingleEvent(AftEvent.PLANK)
     }
-    val runScore = remember(uiState.twoMileRunSeconds, uiState.age, uiState.gender, uiState.mosCategory) {
-        viewModel.calculateSingleEvent(AftEvent.TWO_MILE_RUN)
+    val runScore = remember(uiState.twoMileRunSeconds, uiState.age, uiState.gender, uiState.mosCategory, uiState.useAlternateAerobic) {
+        if (uiState.useAlternateAerobic) null else viewModel.calculateSingleEvent(AftEvent.TWO_MILE_RUN)
     }
 
-    // Calculate running total
-    val eventScores = listOfNotNull(deadliftScore, pushUpScore, sdcScore, plankScore, runScore)
+    // Calculate alternate aerobic score
+    val alternateScore = remember(
+        uiState.useAlternateAerobic,
+        uiState.alternateAerobicEvent,
+        uiState.alternateAerobicTime,
+        uiState.age,
+        uiState.gender,
+        uiState.mosCategory
+    ) {
+        if (uiState.useAlternateAerobic) {
+            viewModel.calculateSingleEvent(uiState.alternateAerobicEvent)
+        } else null
+    }
+
+    // Get max passing time for alternate aerobic event
+    val alternateMaxPassingTime = remember(
+        uiState.alternateAerobicEvent,
+        uiState.age,
+        uiState.gender,
+        uiState.mosCategory
+    ) {
+        viewModel.getAlternateMaxPassingTime(uiState.alternateAerobicEvent)
+    }
+
+    // Calculate running total (use alternate if selected, otherwise 2-mile run)
+    val aerobicScore = if (uiState.useAlternateAerobic) alternateScore else runScore
+    val eventScores = listOfNotNull(deadliftScore, pushUpScore, sdcScore, plankScore, aerobicScore)
     val runningTotal = eventScores.sumOf { it.points }
     val enteredEvents = eventScores.size
     // Use MOS-specific minimum totals (350 for Combat, 300 for Combat-Enabling)
@@ -264,16 +290,31 @@ fun CalculatorScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                EventInputCard(
-                    event = AftEvent.TWO_MILE_RUN,
-                    value = uiState.twoMileRunSeconds,
-                    onValueChange = { viewModel.updateTwoMileRun(it) },
-                    liveScore = runScore,
-                    minRequired = minPerEvent,
-                    minPassingRaw = minPassingRun,
-                    isExempt = uiState.twoMileRunExempt,
-                    onExemptToggle = { viewModel.toggleTwoMileRunExempt() }
-                )
+                // Aerobic Event: Either 2-Mile Run or Alternate
+                if (uiState.useAlternateAerobic) {
+                    AlternateAerobicCard(
+                        selectedEvent = uiState.alternateAerobicEvent,
+                        onEventChange = { viewModel.setAlternateAerobicEvent(it) },
+                        timeValue = uiState.alternateAerobicTime,
+                        onTimeChange = { viewModel.updateAlternateAerobicTime(it) },
+                        maxPassingTime = alternateMaxPassingTime,
+                        liveScore = alternateScore,
+                        onSwitchToStandard = { viewModel.toggleUseAlternateAerobic() }
+                    )
+                } else {
+                    EventInputCard(
+                        event = AftEvent.TWO_MILE_RUN,
+                        value = uiState.twoMileRunSeconds,
+                        onValueChange = { viewModel.updateTwoMileRun(it) },
+                        liveScore = runScore,
+                        minRequired = minPerEvent,
+                        minPassingRaw = minPassingRun,
+                        isExempt = uiState.twoMileRunExempt,
+                        onExemptToggle = { viewModel.toggleTwoMileRunExempt() },
+                        showAlternateOption = true,
+                        onSwitchToAlternate = { viewModel.toggleUseAlternateAerobic() }
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
