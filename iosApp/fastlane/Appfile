@@ -1,0 +1,6 @@
+app_identifier("com.aftcalculator.AFTCalc")
+apple_id(ENV["APPLE_ID"]) # Your Apple Developer email
+team_id("RBYZJ6KX4D")
+
+# App Store Connect API Key (preferred over password auth)
+# Key is configured via environment variables in CI

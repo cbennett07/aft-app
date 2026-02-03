@@ -31,3 +31,14 @@ local.properties
 *.temp
 *.keystore
 *.jks
+
+# iOS
+iosApp/build/
+*.xcuserdata/
+*.mobileprovision
+*.p12
+*.pem
+*.cer
+DerivedData/
+*.xcuserstate
+xcuserdata/
