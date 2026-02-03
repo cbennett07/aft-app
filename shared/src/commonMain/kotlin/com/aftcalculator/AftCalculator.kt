@@ -126,12 +126,61 @@ class AftCalculator {
         )
     }
 
+    /**
+     * iOS-friendly method to calculate score from up to 5 individual event scores.
+     * Pass null for events that weren't taken.
+     */
+    fun calculateScoreFromEvents(
+        soldier: Soldier,
+        deadliftScore: EventScore?,
+        pushUpScore: EventScore?,
+        sdcScore: EventScore?,
+        plankScore: EventScore?,
+        runScore: EventScore?
+    ): AftScore {
+        val eventScores = listOfNotNull(deadliftScore, pushUpScore, sdcScore, plankScore, runScore)
+        val failureReasons = mutableListOf<String>()
+
+        // Check each event for minimum 60 points
+        for (score in eventScores) {
+            if (score.points < 60) {
+                failureReasons.add("${score.event.displayName}: scored ${score.points}, minimum is 60")
+            }
+        }
+
+        val totalPoints = eventScores.sumOf { it.points }
+
+        // Calculate minimum total based on events taken
+        val fullMinimum = soldier.mosCategory.minimumTotal
+        val minimumTotal = if (eventScores.size < 5) {
+            (fullMinimum * eventScores.size) / 5
+        } else {
+            fullMinimum
+        }
+
+        val totalPassed = totalPoints >= minimumTotal
+        if (!totalPassed) {
+            failureReasons.add("Total score: $totalPoints, minimum required is $minimumTotal")
+        }
+
+        val allEventsPassed = eventScores.all { it.passed }
+        val overallPassed = allEventsPassed && totalPassed
+
+        return AftScore(
+            soldier = soldier,
+            eventScores = eventScores,
+            totalPoints = totalPoints,
+            passed = overallPassed,
+            failureReasons = failureReasons
+        )
+    }
+
     companion object {
         fun formatTime(seconds: Double): String {
             val totalSeconds = seconds.toInt()
             val minutes = totalSeconds / 60
             val secs = totalSeconds % 60
-            return "%d:%02d".format(minutes, secs)
+            return "$minutes:${secs.toString().padStart(2, '0')}"
         }
 
         fun parseTime(timeString: String): Double {

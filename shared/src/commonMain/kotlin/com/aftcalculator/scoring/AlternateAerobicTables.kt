@@ -145,6 +145,6 @@ object AlternateAerobicTables {
         val seconds = getMaxPassingTime(event, ageBracket, isMaleOrCombat)
         val mins = seconds / 60
         val secs = seconds % 60
-        return "%d:%02d".format(mins, secs)
+        return "$mins:${secs.toString().padStart(2, '0')}"
     }
 }

@@ -164,6 +164,31 @@ qpdf --json input.pdf | python3 -c "import json,sys; [print(f['fullname']) for f
 - [x] Form 705 PDF generation
 - [ ] Local persistence for score history
 - [ ] Play Store deployment
+- [ ] iOS App Store deployment
+
+## iOS App Store Deployment (Future)
+After Play Store publishing is complete, set up iOS deployment:
+
+1. **Create iosApp module** - Build iOS UI with SwiftUI or Compose Multiplatform
+2. **Set up macOS runner** - iOS builds require `runs-on: macos-latest`
+3. **Apple Developer credentials** - Add GitHub secrets:
+   - `APP_STORE_CONNECT_API_KEY_ID`
+   - `APP_STORE_CONNECT_API_ISSUER_ID`
+   - `APP_STORE_CONNECT_API_KEY` (private key)
+   - Code signing certificates/provisioning profiles
+4. **Fastlane setup** - Configure Fastlane for iOS deployment
+5. **Update GitHub Actions** - Add iOS build and deploy job:
+   ```yaml
+   deploy-app-store:
+     runs-on: macos-latest
+     needs: release
+     steps:
+       - uses: actions/checkout@v4
+       - name: Build iOS app
+         run: ./gradlew :iosApp:buildReleaseXCFramework
+       - name: Deploy with Fastlane
+         run: cd iosApp && fastlane release
+   ```
 
 ## Sources
 - [Army Fitness Test Official](https://www.army.mil/aft/)
