@@ -1,19 +1,28 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.composeCompiler)
 }
 
+// Load local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 android {
     namespace = "com.aftcalculator.android"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.aftcalculator.android"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -25,13 +34,13 @@ android {
         create("release") {
             // These values are set via environment variables in CI or local.properties for local builds
             val keystoreFile = System.getenv("KEYSTORE_FILE")
-                ?: project.findProperty("KEYSTORE_FILE") as String?
+                ?: localProperties.getProperty("KEYSTORE_FILE")
             val keystorePass = System.getenv("KEYSTORE_PASSWORD")
-                ?: project.findProperty("KEYSTORE_PASSWORD") as String?
+                ?: localProperties.getProperty("KEYSTORE_PASSWORD")
             val keyAlias = System.getenv("KEY_ALIAS")
-                ?: project.findProperty("KEY_ALIAS") as String?
+                ?: localProperties.getProperty("KEY_ALIAS")
             val keyPass = System.getenv("KEY_PASSWORD")
-                ?: project.findProperty("KEY_PASSWORD") as String?
+                ?: localProperties.getProperty("KEY_PASSWORD")
 
             if (keystoreFile != null && keystorePass != null && keyAlias != null && keyPass != null) {
                 storeFile = file(keystoreFile)
