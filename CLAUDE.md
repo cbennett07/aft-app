@@ -116,17 +116,12 @@ form1[0].Page1[0].Test_One_Total_Points[0]
 form1[0].Page1[0].OIC_NCOIC_Name_Test_One[0]
 ```
 
-### Current Issue
-PDF generation freezes the app. Tested with checkboxes disabled - still freezes.
-The freeze is likely in PDFBox's `document.save()` struggling with the complex XFA-derived form.
-
-Check Logcat filter "Form705" to see where it stops.
-
-**Next steps to try:**
-1. **Try OpenPDF library** - fork of iText 4, LGPL licensed, better form support
-2. **Try iText 7** - most capable but AGPL (requires open source or commercial license)
-3. **Flatten PDF first** - use qpdf/pdftk to flatten all unused fields before filling
-4. **Create PDF from scratch** - use Android's native PdfDocument API with form-like layout (not official 705 but contains same data)
+### PDF Freeze Fix (Resolved)
+The freeze was caused by PDFBox trying to regenerate appearances for all fields in the complex XFA-derived form. Fixed by:
+1. Running generation on `Dispatchers.IO` background thread
+2. Only updating appearances for filled fields (not calling `acroForm.refreshAppearances()`)
+3. Adding cycle detection and depth limiting when collecting form fields
+4. Using file-based PDF loading instead of stream
 
 ## Commands
 ```bash
@@ -166,7 +161,7 @@ qpdf --json input.pdf | python3 -c "import json,sys; [print(f['fullname']) for f
 - [x] Profile exemption toggles
 - [x] CI/CD with GitHub Actions
 - [x] Form 705 dialog with soldier/grader info
-- [ ] Form 705 PDF generation (debugging freeze)
+- [x] Form 705 PDF generation
 - [ ] Local persistence for score history
 - [ ] Play Store deployment
 
