@@ -8,11 +8,11 @@ A mobile app for calculating Army Fitness Test (AFT) scores with official scorin
 
 - **Live Scoring** - Scores update instantly as you enter your results
 - **All 5 AFT Events** - Deadlift, Hand-Release Push-Ups, Sprint-Drag-Carry, Plank, 2-Mile Run
-- **Alternate Aerobic Events** - Support for alternate cardio options
+- **Alternate Aerobic Events** - Full support for 2.5-Mile Walk, 5K Row, 12K Stationary Bike, and 1K Swim
 - **MOS-Based Standards** - Combat vs Combat-Enabling MOS scoring rules
 - **Age & Gender Adjusted** - Accurate scoring across all demographics
-- **Medical Profile Support** - Toggle exemptions for individual events
-- **DA Form 705 Generation** - Auto-fill the official Army fitness scorecard
+- **Medical Profile Support** - Toggle exemptions for individual events with pro-rated minimums
+- **DA Form 705 Generation** - Generates a pre-populated official Army fitness scorecard PDF with all your info
 - **Pass/Fail Indicators** - Color-coded feedback (red/yellow/green)
 - **Dark Theme** - GoArmy-inspired military aesthetic
 
@@ -35,6 +35,26 @@ A mobile app for calculating Army Fitness Test (AFT) scores with official scorin
 
 ### Age Brackets
 17-21, 22-26, 27-31, 32-36, 37-41, 42-46, 47-51, 52-56, 57-61, 62+
+
+### Alternate Aerobic Events
+For Soldiers with approved profiles, the 2-Mile Run can be substituted with:
+- **2.5-Mile Walk** - 25:00-34:00+ time range
+- **5,000 Meter Row** - 18:00-25:00+ time range
+- **12,000 Meter Stationary Bike** - 22:00-32:00+ time range
+- **1,000 Meter Swim** - 20:00-30:00+ time range
+
+## DA Form 705 Generation
+
+AFT Calc can generate a **pre-populated DA Form 705** (Army Physical Fitness Test Scorecard) PDF with:
+
+- Soldier name, unit, and location
+- MOS and pay grade
+- Age and test date
+- All event raw scores and point values
+- Total score and pass/fail status
+- Grader/OIC/NCOIC information
+
+Simply enter your information once, and the app fills out the official form for you - ready to print or share.
 
 ## Download
 
