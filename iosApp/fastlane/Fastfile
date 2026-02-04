@@ -9,7 +9,12 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store",
       output_directory: "./build",
-      output_name: "AFTCalc.ipa"
+      output_name: "AFTCalc.ipa",
+      export_options: {
+        provisioningProfiles: {
+          "com.aftcalculator.AFTCalc" => "AFTCalc"
+        }
+      }
     )
   end
 
