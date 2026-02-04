@@ -31,6 +31,19 @@ struct HomeView: View {
                             .font(.system(size: 24, weight: .bold))
                             .tracking(2)
                             .foregroundColor(.white)
+
+                        // Effective date tagline
+                        Text("EFFECTIVE JUNE 2025")
+                            .font(.system(size: 10, weight: .bold))
+                            .tracking(1)
+                            .foregroundColor(.armyGold)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(Color.armyGold, lineWidth: 1)
+                            )
+                            .padding(.top, 8)
                     }
                     .padding(.top, 40)
                     .padding(.bottom, 20)
