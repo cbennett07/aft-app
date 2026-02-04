@@ -1,7 +1,7 @@
 # AFT Calculator App
 
 ## Project Overview
-Army Fitness Test (AFT) calculator for Android, built with Kotlin and Jetpack Compose. Designed for future iOS expansion via Kotlin Multiplatform.
+Army Fitness Test (AFT) calculator for Android and iOS. Android built with Kotlin and Jetpack Compose, iOS built with SwiftUI. Shared scoring logic via Kotlin Multiplatform.
 
 ## AFT Events (Official as of June 2025)
 1. **3-Rep Max Deadlift** - 140-340 lbs range
@@ -74,10 +74,16 @@ aft-app/
 │       │   └── values/
 │       └── assets/
 │           └── da_form_705.pdf              # Blank DA Form 705 (XFA-stripped)
+├── iosApp/                          # iOS SwiftUI app
+│   ├── iosApp.xcodeproj/
+│   ├── iosApp/                      # SwiftUI source files
+│   └── fastlane/                    # Fastlane config
 ├── docs/
 │   ├── ARN43863-DA_FORM_705-TEST-107-WEB-8.pdf  # Original form
 │   └── HQDA_EXORD_218-25__CC__Annex_B_-_Scoring_Tables__Final_.pdf
 └── .github/workflows/
+    ├── android.yml                  # Android CI/CD
+    └── ios.yml                      # iOS CI/CD
 ```
 
 ## Key Features Implemented
@@ -159,36 +165,70 @@ qpdf --json input.pdf | python3 -c "import json,sys; [print(f['fullname']) for f
 - [x] GoArmy dark theme
 - [x] Live scoring with color indicators
 - [x] Profile exemption toggles
-- [x] CI/CD with GitHub Actions
+- [x] CI/CD with GitHub Actions (Android + iOS)
 - [x] Form 705 dialog with soldier/grader info
 - [x] Form 705 PDF generation
+- [x] iOS App Store deployment (TestFlight CI/CD configured)
 - [ ] Local persistence for score history
-- [ ] Play Store deployment
-- [ ] iOS App Store deployment
+- [ ] Play Store deployment (waiting on API key)
 
-## iOS App Store Deployment (Future)
-After Play Store publishing is complete, set up iOS deployment:
+## iOS App Store Deployment
+iOS deployment is fully configured with automated CI/CD.
 
-1. **Create iosApp module** - Build iOS UI with SwiftUI or Compose Multiplatform
-2. **Set up macOS runner** - iOS builds require `runs-on: macos-latest`
-3. **Apple Developer credentials** - Add GitHub secrets:
-   - `APP_STORE_CONNECT_API_KEY_ID`
-   - `APP_STORE_CONNECT_API_ISSUER_ID`
-   - `APP_STORE_CONNECT_API_KEY` (private key)
-   - Code signing certificates/provisioning profiles
-4. **Fastlane setup** - Configure Fastlane for iOS deployment
-5. **Update GitHub Actions** - Add iOS build and deploy job:
-   ```yaml
-   deploy-app-store:
-     runs-on: macos-latest
-     needs: release
-     steps:
-       - uses: actions/checkout@v4
-       - name: Build iOS app
-         run: ./gradlew :iosApp:buildReleaseXCFramework
-       - name: Deploy with Fastlane
-         run: cd iosApp && fastlane release
-   ```
+### iOS Tech Stack
+- **UI**: SwiftUI
+- **Bundle ID**: `com.aftcalculator.AFTCalc`
+- **Team ID**: `RBYZJ6KX4D`
+- **Deployment**: Fastlane + GitHub Actions
+
+### iOS Project Structure
+```
+iosApp/
+├── iosApp.xcodeproj/          # Xcode project
+├── iosApp/                    # SwiftUI source
+│   ├── iosAppApp.swift        # App entry point
+│   ├── HomeView.swift         # Gender/age/MOS selection
+│   ├── CalculatorView.swift   # Event scoring calculator
+│   ├── ResultsView.swift      # Results display
+│   ├── Form705Generator.swift # DA Form 705 PDF generation
+│   ├── AftTypes.swift         # Domain models
+│   ├── Theme.swift            # GoArmy dark theme
+│   └── Assets.xcassets/       # App icons
+├── fastlane/
+│   ├── Appfile                # App identifier config
+│   └── Fastfile               # Build/deploy lanes
+└── Gemfile                    # Fastlane dependencies
+```
+
+### GitHub Actions Workflow
+- **File**: `.github/workflows/ios.yml`
+- **Trigger**: Push to `master` branch
+- **Jobs**:
+  - `build`: Builds debug app on iOS Simulator
+  - `deploy-testflight`: Archives and uploads to TestFlight
+
+### Required GitHub Secrets
+```
+APP_STORE_CONNECT_API_KEY_ID     # App Store Connect API Key ID
+APP_STORE_CONNECT_API_ISSUER_ID  # App Store Connect Issuer ID
+APP_STORE_CONNECT_API_KEY        # Base64-encoded .p8 key
+IOS_CERTIFICATE_BASE64           # Base64-encoded .p12 distribution cert
+IOS_CERTIFICATE_PASSWORD         # Password for .p12
+IOS_PROVISIONING_PROFILE_BASE64  # Base64-encoded .mobileprovision
+KEYCHAIN_PASSWORD                # Temp keychain password (any string)
+```
+
+### Fastlane Lanes
+```bash
+# Build release IPA
+cd iosApp && bundle exec fastlane build
+
+# Deploy to TestFlight
+cd iosApp && bundle exec fastlane beta
+
+# Deploy to App Store
+cd iosApp && bundle exec fastlane release
+```
 
 ## Sources
 - [Army Fitness Test Official](https://www.army.mil/aft/)
