@@ -1409,7 +1409,7 @@ struct LiveEventInputCard: View {
             // Input + Score row
             HStack(alignment: .top, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
-                    TextField("", text: $value)
+                    TextField("", text: $value, prompt: Text(hint).foregroundColor(.white.opacity(0.3)))
                         .keyboardType(keyboardType)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(isExempt ? .white.opacity(0.5) : .white)
