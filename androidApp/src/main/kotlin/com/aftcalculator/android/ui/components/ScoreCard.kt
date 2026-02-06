@@ -207,7 +207,7 @@ private fun EventScoreRow(
                 text = eventScore.event.displayName,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = ArmyGold
             )
             Text(
                 text = formatRawValue(eventScore),
@@ -217,15 +217,6 @@ private fun EventScoreRow(
         }
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            if (minRequired > 0) {
-                Text(
-                    text = "min $minRequired",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.4f),
-                    modifier = Modifier.padding(end = 12.dp)
-                )
-            }
-
             Box(
                 modifier = Modifier
                     .width(64.dp)
@@ -287,7 +278,7 @@ private fun ExemptEventScoreRow(
                 text = eventName,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = ArmyGold.copy(alpha = 0.5f)
             )
             Text(
                 text = "Exempt",

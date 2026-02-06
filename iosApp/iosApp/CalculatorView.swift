@@ -1088,8 +1088,9 @@ struct EventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventScore.eventName.uppercased())
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 14, weight: .bold))
+                    .tracking(1)
+                    .foregroundColor(.armyGold)
                 Text(formattedRawValue)
                     .font(.system(size: 14))
                     .foregroundColor(.white.opacity(0.5))
@@ -1120,8 +1121,9 @@ struct ExemptEventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventName.uppercased())
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 14, weight: .bold))
+                    .tracking(1)
+                    .foregroundColor(.armyGold.opacity(0.5))
                 Text("Exempt")
                     .font(.system(size: 14))
                     .foregroundColor(.white.opacity(0.5))
