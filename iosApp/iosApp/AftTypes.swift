@@ -145,54 +145,34 @@ class AftCalculator {
 
         switch event {
         case .deadlift:
-            return interpolateScore(rawValue: rawValue, table: getDeadliftTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
+            return lookupScore(rawValue: rawValue, table: getDeadliftTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
         case .pushUp:
-            return interpolateScore(rawValue: rawValue, table: getPushUpTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
+            return lookupScore(rawValue: rawValue, table: getPushUpTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
         case .sprintDragCarry:
-            return interpolateScore(rawValue: rawValue, table: getSDCTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: false)
+            return lookupScore(rawValue: rawValue, table: getSDCTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: false)
         case .plank:
-            return interpolateScore(rawValue: rawValue, table: getPlankTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
+            return lookupScore(rawValue: rawValue, table: getPlankTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: true)
         case .twoMileRun:
-            return interpolateScore(rawValue: rawValue, table: getTwoMileRunTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: false)
+            return lookupScore(rawValue: rawValue, table: getTwoMileRunTable(ageBracket: ageBracket, female: useFemaleTables), higherIsBetter: false)
         case .walk25Mile, .row5k, .bike12k, .swim1k:
             return calculateAlternateAerobicScore(event: event, timeInSeconds: rawValue, ageBracket: ageBracket, gender: gender, isCombatMos: isCombatMos)
         }
     }
 
-    private func interpolateScore(rawValue: Double, table: [ScoreEntry], higherIsBetter: Bool) -> Int {
+    private func lookupScore(rawValue: Double, table: [ScoreEntry], higherIsBetter: Bool) -> Int {
         if table.isEmpty { return 0 }
 
-        // Sort table appropriately
+        // Sort best-to-worst: descending for higher-is-better, ascending for lower-is-better
         let sortedTable = higherIsBetter
             ? table.sorted { $0.rawValue > $1.rawValue }
             : table.sorted { $0.rawValue < $1.rawValue }
 
-        // Check bounds
-        if higherIsBetter {
-            if rawValue >= sortedTable.first!.rawValue { return sortedTable.first!.points }
-            if rawValue <= sortedTable.last!.rawValue { return sortedTable.last!.points }
-        } else {
-            if rawValue <= sortedTable.first!.rawValue { return sortedTable.first!.points }
-            if rawValue >= sortedTable.last!.rawValue { return sortedTable.last!.points }
-        }
-
-        // Find bracketing entries and interpolate
-        for i in 0..<(sortedTable.count - 1) {
-            let upper = sortedTable[i]
-            let lower = sortedTable[i + 1]
-
-            let inRange = higherIsBetter
-                ? (rawValue <= upper.rawValue && rawValue > lower.rawValue)
-                : (rawValue >= upper.rawValue && rawValue < lower.rawValue)
-
-            if inRange {
-                // Linear interpolation
-                let rawRange = abs(upper.rawValue - lower.rawValue)
-                let pointRange = upper.points - lower.points
-                let rawDiff = higherIsBetter ? (upper.rawValue - rawValue) : (rawValue - upper.rawValue)
-                let fraction = rawDiff / rawRange
-                return upper.points - Int(Double(pointRange) * fraction)
-            }
+        // Step function: find the first (best) threshold the soldier met
+        for entry in sortedTable {
+            let met = higherIsBetter
+                ? rawValue >= entry.rawValue
+                : rawValue <= entry.rawValue
+            if met { return entry.points }
         }
 
         return 0

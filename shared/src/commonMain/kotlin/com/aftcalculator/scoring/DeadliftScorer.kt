@@ -16,6 +16,6 @@ object DeadliftScorer : EventScorer {
         val scoringCategory = OfficialScoreTables.getScoringCategory(gender, mosCategory)
         val table = OfficialScoreTables.getDeadliftTable(scoringCategory, ageBracket)
 
-        return interpolateScore(rawValue, table, higherIsBetter = true)
+        return lookupScore(rawValue, table, higherIsBetter = true)
     }
 }

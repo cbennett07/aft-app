@@ -16,6 +16,6 @@ object PushUpScorer : EventScorer {
         val scoringCategory = OfficialScoreTables.getScoringCategory(gender, mosCategory)
         val table = PushUpTables.getTable(scoringCategory, ageBracket)
 
-        return interpolateScore(rawValue, table, higherIsBetter = true)
+        return lookupScore(rawValue, table, higherIsBetter = true)
     }
 }

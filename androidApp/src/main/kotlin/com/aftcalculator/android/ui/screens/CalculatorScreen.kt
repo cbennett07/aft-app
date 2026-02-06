@@ -85,19 +85,22 @@ fun CalculatorScreen(
     // Calculate running total (use alternate if selected, otherwise 2-mile run)
     val aerobicScore = if (uiState.useAlternateAerobic) alternateScore else runScore
     val eventScores = listOfNotNull(deadliftScore, pushUpScore, sdcScore, plankScore, aerobicScore)
-    val runningTotal = eventScores.sumOf { it.points }
     val enteredEvents = eventScores.size
-    // Use MOS-specific minimum totals (350 for Combat, 300 for Combat-Enabling)
-    // Pro-rate if fewer than 5 events taken
-    val fullMinimum = uiState.mosCategory.minimumTotal
-    val minimumRequired = if (enteredEvents < 5 && enteredEvents > 0) {
-        (fullMinimum * enteredEvents) / 5
-    } else {
-        fullMinimum
-    }
+    // Count exempt events from toggles
+    val exemptCount = listOf(
+        uiState.deadliftExempt,
+        uiState.pushUpExempt,
+        uiState.sprintDragCarryExempt,
+        uiState.plankExempt,
+        uiState.twoMileRunExempt && !uiState.useAlternateAerobic
+    ).count { it }
+    val exemptPoints = exemptCount * 60
+    val runningTotal = eventScores.sumOf { it.points } + exemptPoints
+    // Minimum always stays at full value; exempt events contribute 60 pts each
+    val minimumRequired = uiState.mosCategory.minimumTotal
     // Check if any event is failing (below 60) OR total is below minimum
     val anyEventFailing = eventScores.any { it.points < 60 }
-    val isOnTrack = enteredEvents == 0 || (!anyEventFailing && runningTotal >= minimumRequired)
+    val isOnTrack = enteredEvents == 0 && exemptCount == 0 || (!anyEventFailing && runningTotal >= minimumRequired)
 
     // Calculate minimum passing raw values based on current soldier config
     // All values now vary by age, so include age in remember keys
@@ -172,7 +175,7 @@ fun CalculatorScreen(
                     .padding(16.dp)
             ) {
                 // Running total card
-                if (enteredEvents > 0) {
+                if (enteredEvents > 0 || exemptCount > 0) {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -203,7 +206,7 @@ fun CalculatorScreen(
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "$enteredEvents of 5 events entered",
+                                    text = "${enteredEvents + exemptCount} of 5 events ($exemptCount exempt)",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = Color.White.copy(alpha = 0.5f)
                                 )

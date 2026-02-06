@@ -13,6 +13,6 @@ object PlankScorer : EventScorer {
     ): Int {
         // Plank scoring is gender-neutral per official tables
         val table = TimedEventTables.getPlankTable(ageBracket)
-        return interpolateScore(rawValue, table, higherIsBetter = true)
+        return lookupScore(rawValue, table, higherIsBetter = true)
     }
 }

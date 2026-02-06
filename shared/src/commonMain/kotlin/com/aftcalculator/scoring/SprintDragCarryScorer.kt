@@ -16,6 +16,6 @@ object SprintDragCarryScorer : EventScorer {
         val scoringCategory = OfficialScoreTables.getScoringCategory(gender, mosCategory)
         val table = TimedEventTables.getSdcTable(scoringCategory, ageBracket)
 
-        return interpolateScore(rawValue, table, higherIsBetter = false)
+        return lookupScore(rawValue, table, higherIsBetter = false)
     }
 }

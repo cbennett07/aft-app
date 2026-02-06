@@ -16,6 +16,6 @@ object TwoMileRunScorer : EventScorer {
         val scoringCategory = OfficialScoreTables.getScoringCategory(gender, mosCategory)
         val table = TwoMileRunTables.getTable(scoringCategory, ageBracket)
 
-        return interpolateScore(rawValue, table, higherIsBetter = false)
+        return lookupScore(rawValue, table, higherIsBetter = false)
     }
 }

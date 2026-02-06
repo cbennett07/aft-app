@@ -60,16 +60,11 @@ class AftCalculator {
             )
         }
 
-        val totalPoints = eventScores.sumOf { it.points }
-        // Use MOS-specific minimum totals (350 for Combat, 300 for Combat-Enabling)
-        // Pro-rate if fewer than 5 events taken due to exemptions
-        val fullMinimum = soldier.mosCategory.minimumTotal
-        val minimumTotal = if (inputs.size < 5) {
-            // Pro-rate: Combat needs 70 per event (350/5), Combat-Enabling needs 60 (300/5)
-            (fullMinimum * inputs.size) / 5
-        } else {
-            fullMinimum
-        }
+        // Exempt events receive 60 points each; minimum total stays at full value
+        val exemptCount = 5 - inputs.size
+        val exemptPoints = exemptCount * 60
+        val totalPoints = eventScores.sumOf { it.points } + exemptPoints
+        val minimumTotal = soldier.mosCategory.minimumTotal
         val totalPassed = totalPoints >= minimumTotal
 
         if (!totalPassed) {
@@ -148,15 +143,11 @@ class AftCalculator {
             }
         }
 
-        val totalPoints = eventScores.sumOf { it.points }
-
-        // Calculate minimum total based on events taken
-        val fullMinimum = soldier.mosCategory.minimumTotal
-        val minimumTotal = if (eventScores.size < 5) {
-            (fullMinimum * eventScores.size) / 5
-        } else {
-            fullMinimum
-        }
+        // Exempt events receive 60 points each; minimum total stays at full value
+        val exemptCount = 5 - eventScores.size
+        val exemptPoints = exemptCount * 60
+        val totalPoints = eventScores.sumOf { it.points } + exemptPoints
+        val minimumTotal = soldier.mosCategory.minimumTotal
 
         val totalPassed = totalPoints >= minimumTotal
         if (!totalPassed) {

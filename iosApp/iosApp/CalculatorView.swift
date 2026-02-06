@@ -111,10 +111,19 @@ struct CalculatorView: View {
         return useAlternateAerobic ? alternateAerobicPoints : runPoints
     }
 
+    private var exemptCount: Int {
+        [deadliftExempt, pushUpExempt, sdcExempt, plankExempt, runExempt].filter { $0 }.count
+    }
+
+    private var exemptPoints: Int32 {
+        Int32(exemptCount) * 60
+    }
+
     private var runningTotal: Int32 {
-        [deadliftPoints, pushUpPoints, sdcPoints, plankPoints, aerobicPoints]
+        let scored = [deadliftPoints, pushUpPoints, sdcPoints, plankPoints, aerobicPoints]
             .compactMap { $0 }
             .reduce(0, +)
+        return scored + exemptPoints
     }
 
     private var eventCount: Int {
@@ -123,26 +132,12 @@ struct CalculatorView: View {
             .count
     }
 
-    private var totalRequiredEvents: Int {
-        var count = 5
-        if deadliftExempt { count -= 1 }
-        if pushUpExempt { count -= 1 }
-        if sdcExempt { count -= 1 }
-        if plankExempt { count -= 1 }
-        if runExempt { count -= 1 }
-        return count
-    }
-
     private var isOnTrack: Bool {
         let scores = [deadliftPoints, pushUpPoints, sdcPoints, plankPoints, aerobicPoints].compactMap { $0 }
-        guard !scores.isEmpty else { return true }
+        guard !scores.isEmpty || exemptCount > 0 else { return true }
         let anyFailing = scores.contains { $0 < 60 }
-        // Pro-rate minimum: scale by events entered out of total required (not 5)
-        let requiredEvents = max(totalRequiredEvents, 1)
-        // Full minimum for required events, then pro-rate by how many are entered
-        let fullMinForRequired = (mosCategory.minimumTotal * Int32(requiredEvents)) / 5
-        let proRatedMinimum = (fullMinForRequired * Int32(scores.count)) / Int32(requiredEvents)
-        return !anyFailing && runningTotal >= proRatedMinimum
+        // Minimum stays at full value; exempt events contribute 60 pts each
+        return !anyFailing && runningTotal >= mosCategory.minimumTotal
     }
 
     // Minimum passing values (60 points)
@@ -251,13 +246,13 @@ struct CalculatorView: View {
                 ScrollView {
                     VStack(spacing: 16) {
                         // Running Total Card
-                        if eventCount > 0 {
+                        if eventCount > 0 || exemptCount > 0 {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("RUNNING TOTAL")
                                         .font(.system(size: 12, weight: .bold))
                                         .foregroundColor(.armyGold)
-                                    Text("\(eventCount) of \(totalRequiredEvents) events")
+                                    Text("\(eventCount + exemptCount) of 5 events (\(exemptCount) exempt)")
                                         .font(.system(size: 11))
                                         .foregroundColor(.white.opacity(0.5))
                                 }
@@ -466,16 +461,13 @@ struct CalculatorView: View {
             }
         }
 
-        guard !swiftScores.isEmpty else { return }
+        guard !swiftScores.isEmpty || exemptCount > 0 else { return }
 
-        let totalPoints = swiftScores.reduce(0) { $0 + $1.points }
+        // Exempt events receive 60 points each; minimum stays at full value
+        let exemptPts = Int32(exemptCount) * 60
+        let totalPoints = swiftScores.reduce(0) { $0 + $1.points } + exemptPts
         let allEventsPassed = swiftScores.allSatisfy { $0.points >= 60 }
-        let fullMinimum = mosCategory.minimumTotal
-        // Pro-rate minimum based on non-exempt events (5 - exemptCount)
-        let requiredEvents = max(5 - exemptCount, 1)
-        let minimumTotal = swiftScores.count < requiredEvents
-            ? (fullMinimum * Int32(swiftScores.count)) / Int32(requiredEvents)
-            : (fullMinimum * Int32(requiredEvents)) / 5
+        let minimumTotal = mosCategory.minimumTotal
         let totalPassed = totalPoints >= minimumTotal
 
         if !totalPassed {
@@ -576,9 +568,10 @@ struct ResultsContent: View {
                                 .tracking(2)
                                 .foregroundColor(.white.opacity(0.6))
 
-                            let eventsCount = Int32(score.eventScores.count)
-                            let minimumTotal = eventsCount < 5 ? (score.mosCategoryMinimum * eventsCount) / 5 : score.mosCategoryMinimum
-                            Text("Minimum required: \(minimumTotal)")
+                            let exemptEvents = 5 - Int32(score.eventScores.count)
+                            Text(exemptEvents > 0
+                                ? "Minimum required: \(score.mosCategoryMinimum) (\(exemptEvents) exempt @ 60 pts)"
+                                : "Minimum required: \(score.mosCategoryMinimum)")
                                 .font(.system(size: 14))
                                 .foregroundColor(.white.opacity(0.5))
                         }
@@ -683,9 +676,7 @@ struct ResultsContent: View {
                             InfoRow(label: "Minimum per event", value: "60 points")
                             InfoRow(label: "Events taken", value: "\(score.eventScores.count)")
 
-                            let eventsCount = Int32(score.eventScores.count)
-                            let minTotal = eventsCount < 5 ? (score.mosCategoryMinimum * eventsCount) / 5 : score.mosCategoryMinimum
-                            InfoRow(label: "Minimum total", value: "\(minTotal) points")
+                            InfoRow(label: "Minimum total", value: "\(score.mosCategoryMinimum) points")
 
                             InfoRow(label: "Gender", value: score.soldierGender)
                             InfoRow(label: "Age bracket", value: score.soldierAgeBracketName)
@@ -1313,7 +1304,7 @@ struct LiveEventInputCard: View {
                 }
 
                 VStack(spacing: 4) {
-                    Text(isExempt ? "N/A" : (points != nil ? "\(points!)" : "--"))
+                    Text(isExempt ? "60" : (points != nil ? "\(points!)" : "--"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(scoreColor)
                         .frame(width: 64, height: 48)

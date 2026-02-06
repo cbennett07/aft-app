@@ -273,7 +273,7 @@ fun EventInputCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = if (isExempt) "N/A" else (liveScore?.points?.toString() ?: "--"),
+                            text = if (isExempt) "60" else (liveScore?.points?.toString() ?: "--"),
                             style = MaterialTheme.typography.headlineMedium,
                             fontWeight = FontWeight.Bold,
                             color = scoreColor,

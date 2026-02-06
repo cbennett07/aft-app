@@ -30,14 +30,8 @@ fun ScoreResultCard(
 ) {
     // Check if any event is below 60 (standard passing threshold)
     val anyEventFailed = score.eventScores.any { it.points < 60 }
-    // Use MOS-specific minimum totals (350 for Combat, 300 for Combat-Enabling)
-    // Pro-rate if fewer than 5 events taken due to exemptions
-    val fullMinimum = score.soldier.mosCategory.minimumTotal
-    val minimumTotal = if (score.eventScores.size < 5) {
-        (fullMinimum * score.eventScores.size) / 5
-    } else {
-        fullMinimum
-    }
+    // Minimum stays at full value; exempt events contribute 60 pts to total
+    val minimumTotal = score.soldier.mosCategory.minimumTotal
     val totalFailed = score.totalPoints < minimumTotal
     val overallPassed = !anyEventFailed && !totalFailed
 
@@ -109,7 +103,7 @@ fun ScoreResultCard(
 
             Text(
                 text = if (score.eventScores.size < 5) {
-                    "Minimum required: $minimumTotal (pro-rated from ${score.soldier.mosCategory.minimumTotal})"
+                    "Minimum required: $minimumTotal (${5 - score.eventScores.size} exempt @ 60 pts)"
                 } else {
                     "Minimum required: $minimumTotal"
                 },
