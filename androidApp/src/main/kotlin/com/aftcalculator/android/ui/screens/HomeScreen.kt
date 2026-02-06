@@ -131,8 +131,8 @@ fun HomeScreen(
                     Slider(
                         value = uiState.age.toFloat(),
                         onValueChange = { onAgeChange(it.toInt()) },
-                        valueRange = 17f..70f,
-                        steps = 52,
+                        valueRange = 17f..62f,
+                        steps = 44,
                         modifier = Modifier.fillMaxWidth(),
                         colors = SliderDefaults.colors(
                             thumbColor = ArmyGold,
@@ -270,12 +270,10 @@ private fun MosCategoryCard(
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(16.dp)
         ) {
             Column {
                 Text(
@@ -293,15 +291,17 @@ private fun MosCategoryCard(
             if (selected) {
                 Box(
                     modifier = Modifier
-                        .size(24.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(ArmyGold),
+                        .size(18.dp)
+                        .clip(RoundedCornerShape(9.dp))
+                        .background(ArmyGold)
+                        .align(Alignment.TopEnd),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "✓",
                         color = ArmyBlack,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 11.sp
                     )
                 }
             }

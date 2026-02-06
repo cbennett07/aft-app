@@ -1119,27 +1119,31 @@ struct ExemptEventScoreRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventName.uppercased())
                     .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(.white.opacity(0.4))
-                Text("Profile Exempt")
+                    .foregroundColor(.white)
+                Text("Exempt")
                     .font(.system(size: 14))
-                    .foregroundColor(.white.opacity(0.3))
+                    .foregroundColor(.white.opacity(0.5))
             }
             Spacer()
             Text("60")
                 .font(.system(size: 24, weight: .bold))
-                .foregroundColor(.white.opacity(0.3))
+                .foregroundColor(.white.opacity(0.7))
                 .frame(width: 64)
                 .padding(.vertical, 8)
                 .background(Color.white.opacity(0.05))
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
                 )
         }
         .padding(12)
         .background(Color.white.opacity(0.03))
         .cornerRadius(8)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+        )
     }
 }
 
@@ -1205,6 +1209,7 @@ struct AlternateAerobicCard: View {
                     Text("Use 2-Mile Run")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(.armyGold)
+                        .underline()
                 }
             }
 
@@ -1356,6 +1361,7 @@ struct LiveEventInputCard: View {
                     Text("Use Alternate Aerobic Event")
                         .font(.system(size: 11, weight: .medium))
                         .foregroundColor(.armyGold)
+                        .underline()
                 }
             }
 

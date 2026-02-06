@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.aftcalculator.android.ui.theme.ArmyGold
 import com.aftcalculator.android.ui.theme.PassGreen
@@ -175,7 +176,7 @@ fun EventInputCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Profile Exempt",
+                        text = "Exempt",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.White.copy(alpha = 0.5f),
                         modifier = Modifier.padding(end = 8.dp)
@@ -204,7 +205,8 @@ fun EventInputCard(
                     Text(
                         text = "Use Alternate Aerobic Event",
                         style = MaterialTheme.typography.labelSmall,
-                        color = ArmyGold
+                        color = ArmyGold,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
             }
@@ -371,7 +373,8 @@ fun AlternateAerobicCard(
                     Text(
                         text = "Use 2-Mile Run",
                         style = MaterialTheme.typography.labelSmall,
-                        color = ArmyGold
+                        color = ArmyGold,
+                        textDecoration = TextDecoration.Underline
                     )
                 }
             }

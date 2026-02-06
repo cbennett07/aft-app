@@ -291,6 +291,7 @@ private fun ExemptEventScoreRow(
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
             .background(Color.White.copy(alpha = 0.03f))
+            .border(1.dp, Color.White.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
             .padding(12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -300,12 +301,12 @@ private fun ExemptEventScoreRow(
                 text = eventName,
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium,
-                color = Color.White.copy(alpha = 0.4f)
+                color = Color.White
             )
             Text(
-                text = "Profile Exempt",
+                text = "Exempt",
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White.copy(alpha = 0.3f)
+                color = Color.White.copy(alpha = 0.5f)
             )
         }
 
@@ -314,7 +315,7 @@ private fun ExemptEventScoreRow(
                 .width(64.dp)
                 .clip(RoundedCornerShape(6.dp))
                 .background(Color.White.copy(alpha = 0.05f))
-                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(6.dp))
                 .padding(horizontal = 10.dp, vertical = 6.dp),
             contentAlignment = Alignment.Center
         ) {
@@ -322,7 +323,7 @@ private fun ExemptEventScoreRow(
                 text = "60",
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.White.copy(alpha = 0.3f),
+                color = Color.White.copy(alpha = 0.7f),
                 textAlign = TextAlign.Center,
                 maxLines = 1
             )

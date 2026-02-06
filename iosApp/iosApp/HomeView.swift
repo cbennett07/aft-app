@@ -64,7 +64,7 @@ struct HomeView: View {
                                     .font(.system(size: 16, weight: .medium))
                                     .foregroundColor(.white)
 
-                                Slider(value: $age, in: 17...70, step: 1)
+                                Slider(value: $age, in: 17...62, step: 1)
                                     .accentColor(.armyGold)
                             }
 
@@ -183,23 +183,25 @@ struct MosCategoryButton: View {
 
     var body: some View {
         Button(action: action) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(title)
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(isSelected ? .armyGold : .white)
-                    Text(subtitle)
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.6))
+            ZStack(alignment: .topTrailing) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(title)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(isSelected ? .armyGold : .white)
+                        Text(subtitle)
+                            .font(.system(size: 11))
+                            .foregroundColor(.white.opacity(0.6))
+                    }
+                    Spacer()
                 }
-                Spacer()
                 if isSelected {
                     ZStack {
                         Circle()
                             .fill(Color.armyGold)
-                            .frame(width: 24, height: 24)
+                            .frame(width: 18, height: 18)
                         Text("\u{2713}")
-                            .font(.system(size: 14, weight: .bold))
+                            .font(.system(size: 11, weight: .bold))
                             .foregroundColor(.armyBlack)
                     }
                 }
