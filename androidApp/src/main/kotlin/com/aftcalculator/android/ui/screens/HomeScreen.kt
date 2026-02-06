@@ -270,41 +270,22 @@ private fun MosCategoryCard(
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         shape = RoundedCornerShape(8.dp)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Column {
-                Text(
-                    text = category.displayName.uppercase(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = if (selected) ArmyGold else Color.White,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "Min: ${category.minimumPerEvent}/event • ${category.minimumTotal} total",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.White.copy(alpha = 0.6f)
-                )
-            }
-            if (selected) {
-                Box(
-                    modifier = Modifier
-                        .size(18.dp)
-                        .clip(RoundedCornerShape(9.dp))
-                        .background(ArmyGold)
-                        .align(Alignment.TopEnd),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "✓",
-                        color = ArmyBlack,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
-                    )
-                }
-            }
+            Text(
+                text = category.displayName.uppercase(),
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (selected) ArmyGold else Color.White,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = "Min: ${category.minimumPerEvent}/event • ${category.minimumTotal} total",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White.copy(alpha = 0.6f)
+            )
         }
     }
 }

@@ -1335,25 +1335,11 @@ struct LiveEventInputCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            // Header with title and exempt toggle
-            HStack {
-                Text(title)
-                    .font(.system(size: 12, weight: .bold))
-                    .tracking(1)
-                    .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
-
-                Spacer()
-
-                HStack(spacing: 8) {
-                    Text("Exempt")
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.5))
-                    Toggle("", isOn: $isExempt)
-                        .labelsHidden()
-                        .scaleEffect(0.8)
-                        .tint(.armyGold)
-                }
-            }
+            // Header with title
+            Text(title)
+                .font(.system(size: 12, weight: .bold))
+                .tracking(1)
+                .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
 
             // Alternate option link (only for 2-mile run, when not exempt)
             if showAlternateOption && !isExempt, let onSwitch = onSwitchToAlternate {
@@ -1385,12 +1371,23 @@ struct LiveEventInputCard: View {
                             }
                         }
 
-                    Text(isExempt ? "Profile Exempt" : hint)
+                    Text(hint)
                         .font(.system(size: 11))
                         .foregroundColor(.white.opacity(0.5))
                 }
 
+                // Score display + exempt toggle - fixed width column
                 VStack(spacing: 4) {
+                    Toggle("", isOn: $isExempt)
+                        .labelsHidden()
+                        .scaleEffect(0.6)
+                        .tint(.armyGold)
+                        .frame(height: 20)
+                    Text("EXEMPT")
+                        .font(.system(size: 8, weight: .medium))
+                        .tracking(0.5)
+                        .foregroundColor(.white.opacity(0.5))
+
                     Text(isExempt ? "60" : (points != nil ? "\(points!)" : "--"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(scoreColor)
@@ -1406,6 +1403,7 @@ struct LiveEventInputCard: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(.white.opacity(0.5))
                 }
+                .frame(width: 80)
             }
         }
         .padding()

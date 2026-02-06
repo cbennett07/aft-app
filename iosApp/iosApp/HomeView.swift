@@ -183,29 +183,15 @@ struct MosCategoryButton: View {
 
     var body: some View {
         Button(action: action) {
-            ZStack(alignment: .topTrailing) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(title)
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(isSelected ? .armyGold : .white)
-                        Text(subtitle)
-                            .font(.system(size: 11))
-                            .foregroundColor(.white.opacity(0.6))
-                    }
-                    Spacer()
-                }
-                if isSelected {
-                    ZStack {
-                        Circle()
-                            .fill(Color.armyGold)
-                            .frame(width: 18, height: 18)
-                        Text("\u{2713}")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundColor(.armyBlack)
-                    }
-                }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(isSelected ? .armyGold : .white)
+                Text(subtitle)
+                    .font(.system(size: 11))
+                    .foregroundColor(.white.opacity(0.6))
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .background(isSelected ? Color.armyGold.opacity(0.15) : Color.clear)
             .cornerRadius(8)

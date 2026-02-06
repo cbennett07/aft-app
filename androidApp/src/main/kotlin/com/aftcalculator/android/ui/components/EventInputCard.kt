@@ -9,14 +9,15 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.aftcalculator.android.ui.theme.ArmyGold
 import com.aftcalculator.android.ui.theme.PassGreen
 import com.aftcalculator.android.ui.theme.FailRed
@@ -143,7 +144,6 @@ fun EventInputCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .alpha(if (isExempt) 0.6f else 1f)
             .border(
                 width = 1.dp,
                 color = Color.White.copy(alpha = 0.1f),
@@ -159,41 +159,13 @@ fun EventInputCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Header row with event name and exempt toggle
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = event.displayName.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = if (isExempt) Color.White.copy(alpha = 0.5f) else ArmyGold,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Exempt",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.5f),
-                        modifier = Modifier.padding(end = 8.dp)
-                    )
-                    Switch(
-                        checked = isExempt,
-                        onCheckedChange = { onExemptToggle() },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = ArmyGold,
-                            checkedTrackColor = ArmyGold.copy(alpha = 0.5f),
-                            uncheckedThumbColor = Color.White.copy(alpha = 0.6f),
-                            uncheckedTrackColor = Color.White.copy(alpha = 0.2f)
-                        ),
-                        modifier = Modifier.height(24.dp)
-                    )
-                }
-            }
+            // Header row with event name
+            Text(
+                text = event.displayName.uppercase(),
+                style = MaterialTheme.typography.labelMedium,
+                color = if (isExempt) Color.White.copy(alpha = 0.5f) else ArmyGold,
+                fontWeight = FontWeight.Bold
+            )
 
             // Switch to alternate option (only for 2-mile run)
             if (showAlternateOption && !isExempt) {
@@ -256,11 +228,32 @@ fun EventInputCard(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Score display - fixed width column
+                // Score display + exempt toggle - fixed width column
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.width(80.dp)
                 ) {
+                    Switch(
+                        checked = isExempt,
+                        onCheckedChange = { onExemptToggle() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ArmyGold,
+                            checkedTrackColor = ArmyGold.copy(alpha = 0.5f),
+                            uncheckedThumbColor = Color.White.copy(alpha = 0.6f),
+                            uncheckedTrackColor = Color.White.copy(alpha = 0.2f)
+                        ),
+                        modifier = Modifier
+                            .height(20.dp)
+                            .scale(0.7f)
+                    )
+                    Text(
+                        text = "EXEMPT",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = Color.White.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 0.5.sp
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
                     Box(
                         modifier = Modifier
                             .width(64.dp)
