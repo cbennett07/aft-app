@@ -141,8 +141,8 @@ fun ScoreResultCard(
 
             // Event Breakdown
             Text(
-                text = "EVENT BREAKDOWN",
-                style = MaterialTheme.typography.labelMedium,
+                text = "EVENT SCORES",
+                style = MaterialTheme.typography.titleMedium,
                 color = ArmyGold,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
@@ -205,8 +205,8 @@ private fun EventScoreRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = eventScore.event.displayName,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(
@@ -285,8 +285,8 @@ private fun ExemptEventScoreRow(
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = eventName,
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium,
+                style = MaterialTheme.typography.titleSmall,
+                fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(

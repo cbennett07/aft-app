@@ -640,7 +640,7 @@ struct ResultsContent: View {
                         // Event Scores
                         VStack(spacing: 12) {
                             Text("EVENT SCORES")
-                                .font(.system(size: 14, weight: .bold))
+                                .font(.system(size: 18, weight: .bold))
                                 .tracking(1)
                                 .foregroundColor(.armyGold)
 
@@ -1088,7 +1088,7 @@ struct EventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventScore.eventName.uppercased())
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
                 Text(formattedRawValue)
                     .font(.system(size: 14))
@@ -1120,7 +1120,7 @@ struct ExemptEventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventName.uppercased())
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
                 Text("Exempt")
                     .font(.system(size: 14))
@@ -1202,7 +1202,7 @@ struct AlternateAerobicCard: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("ALTERNATE AEROBIC EVENT")
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 14, weight: .bold))
                         .tracking(1)
                         .foregroundColor(.armyGold)
 
@@ -1361,7 +1361,7 @@ struct LiveEventInputCard: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(.system(size: 12, weight: .bold))
+                        .font(.system(size: 14, weight: .bold))
                         .tracking(1)
                         .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
 

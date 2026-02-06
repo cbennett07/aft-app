@@ -167,7 +167,7 @@ fun EventInputCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = event.displayName.uppercase(),
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         color = if (isExempt) Color.White.copy(alpha = 0.5f) else ArmyGold,
                         fontWeight = FontWeight.Bold
                     )
@@ -373,7 +373,7 @@ fun AlternateAerobicCard(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "ALTERNATE AEROBIC EVENT",
-                        style = MaterialTheme.typography.labelMedium,
+                        style = MaterialTheme.typography.titleSmall,
                         color = ArmyGold,
                         fontWeight = FontWeight.Bold
                     )
