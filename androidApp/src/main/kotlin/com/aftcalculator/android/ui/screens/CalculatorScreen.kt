@@ -42,19 +42,19 @@ fun CalculatorScreen(
     val scrollState = rememberScrollState()
 
     // Calculate live scores for each event
-    val deadliftScore = remember(uiState.deadliftLbs, uiState.age, uiState.gender, uiState.mosCategory) {
+    val deadliftScore = remember(uiState.deadliftLbs, uiState.deadliftExempt, uiState.age, uiState.gender, uiState.mosCategory) {
         viewModel.calculateSingleEvent(AftEvent.DEADLIFT)
     }
-    val pushUpScore = remember(uiState.pushUpReps, uiState.age, uiState.gender, uiState.mosCategory) {
+    val pushUpScore = remember(uiState.pushUpReps, uiState.pushUpExempt, uiState.age, uiState.gender, uiState.mosCategory) {
         viewModel.calculateSingleEvent(AftEvent.PUSH_UP)
     }
-    val sdcScore = remember(uiState.sprintDragCarrySeconds, uiState.age, uiState.gender, uiState.mosCategory) {
+    val sdcScore = remember(uiState.sprintDragCarrySeconds, uiState.sprintDragCarryExempt, uiState.age, uiState.gender, uiState.mosCategory) {
         viewModel.calculateSingleEvent(AftEvent.SPRINT_DRAG_CARRY)
     }
-    val plankScore = remember(uiState.plankSeconds, uiState.age, uiState.gender, uiState.mosCategory) {
+    val plankScore = remember(uiState.plankSeconds, uiState.plankExempt, uiState.age, uiState.gender, uiState.mosCategory) {
         viewModel.calculateSingleEvent(AftEvent.PLANK)
     }
-    val runScore = remember(uiState.twoMileRunSeconds, uiState.age, uiState.gender, uiState.mosCategory, uiState.useAlternateAerobic) {
+    val runScore = remember(uiState.twoMileRunSeconds, uiState.twoMileRunExempt, uiState.age, uiState.gender, uiState.mosCategory, uiState.useAlternateAerobic) {
         if (uiState.useAlternateAerobic) null else viewModel.calculateSingleEvent(AftEvent.TWO_MILE_RUN)
     }
 
@@ -199,7 +199,7 @@ fun CalculatorScreen(
                             Column {
                                 Text(
                                     text = "RUNNING TOTAL",
-                                    style = MaterialTheme.typography.labelMedium,
+                                    style = MaterialTheme.typography.titleSmall,
                                     color = ArmyGold,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.sp

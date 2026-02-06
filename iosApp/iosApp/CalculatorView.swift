@@ -267,7 +267,8 @@ struct CalculatorView: View {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text("RUNNING TOTAL")
-                                        .font(.system(size: 12, weight: .bold))
+                                        .font(.system(size: 14, weight: .bold))
+                                        .tracking(1)
                                         .foregroundColor(.armyGold)
                                     Text("\(eventCount + exemptCount) of 5 events (\(exemptCount) exempt)")
                                         .font(.system(size: 11))
