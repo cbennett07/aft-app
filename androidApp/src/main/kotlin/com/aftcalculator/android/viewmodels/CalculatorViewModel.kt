@@ -248,8 +248,8 @@ class CalculatorViewModel : ViewModel() {
                         AgeBracket.AGE_42_46 -> "140"
                         AgeBracket.AGE_47_51 -> "140"
                         AgeBracket.AGE_52_56 -> "140"
-                        AgeBracket.AGE_57_61 -> "135"  // interpolated: 140=72, 130=50
-                        AgeBracket.AGE_62_PLUS -> "135" // interpolated: 140=72, 130=50
+                        AgeBracket.AGE_57_61 -> "140"
+                        AgeBracket.AGE_62_PLUS -> "140"
                     }
                 } else {
                     // Female table (Non-Combat females only)
