@@ -179,42 +179,6 @@ fun ScoreResultCard(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Failure Reasons
-            if (score.failureReasons.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(16.dp))
-                HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = "AREAS FOR IMPROVEMENT",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = FailRed,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                score.failureReasons.forEach { reason ->
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.Top
-                    ) {
-                        Text(
-                            text = "•",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = FailRed,
-                            modifier = Modifier.padding(end = 8.dp)
-                        )
-                        Text(
-                            text = reason,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = Color.White.copy(alpha = 0.8f)
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
         }
     }
 }

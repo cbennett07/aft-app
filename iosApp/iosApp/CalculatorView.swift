@@ -666,34 +666,6 @@ struct ResultsContent: View {
                             }
                         }
 
-                        // Failure Reasons
-                        if !score.failureReasons.isEmpty {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("AREAS FOR IMPROVEMENT")
-                                    .font(.system(size: 12, weight: .bold))
-                                    .tracking(1)
-                                    .foregroundColor(.failRed)
-
-                                ForEach(score.failureReasons, id: \.self) { reason in
-                                    HStack(alignment: .top, spacing: 8) {
-                                        Text("\u{2022}")
-                                            .foregroundColor(.failRed)
-                                            .font(.system(size: 14))
-                                        Text(reason)
-                                            .font(.system(size: 14))
-                                            .foregroundColor(.white.opacity(0.8))
-                                    }
-                                }
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.failRed.opacity(0.1))
-                            .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 12)
-                                    .stroke(Color.failRed.opacity(0.3), lineWidth: 1)
-                            )
-                        }
 
                         // Generate Form 705 Button
                         Button(action: { showForm705Dialog = true }) {
