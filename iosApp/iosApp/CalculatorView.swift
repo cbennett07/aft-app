@@ -132,6 +132,22 @@ struct CalculatorView: View {
             .count
     }
 
+    private var allEventsReady: Bool {
+        // Each non-exempt event must have a valid input
+        if !deadliftExempt && (Double(deadliftLbs) ?? 0) <= 0 { return false }
+        if !pushUpExempt && (Double(pushUpReps) ?? 0) <= 0 { return false }
+        if !sdcExempt && sdcTime.isEmpty { return false }
+        if !plankExempt && plankTime.isEmpty { return false }
+        if !runExempt {
+            if useAlternateAerobic {
+                if alternateAerobicTime.isEmpty { return false }
+            } else {
+                if runTime.isEmpty { return false }
+            }
+        }
+        return true
+    }
+
     private var isOnTrack: Bool {
         let scores = [deadliftPoints, pushUpPoints, sdcPoints, plankPoints, aerobicPoints].compactMap { $0 }
         guard !scores.isEmpty || exemptCount > 0 else { return true }
@@ -348,9 +364,10 @@ struct CalculatorView: View {
                                 .foregroundColor(.armyBlack)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 16)
-                                .background(Color.armyGold)
+                                .background(allEventsReady ? Color.armyGold : Color.armyGold.opacity(0.4))
                                 .cornerRadius(8)
                         }
+                        .disabled(!allEventsReady)
                         .padding(.top, 8)
 
                         Text("Minimum required: \(mosCategory.minimumTotal) points")
@@ -621,8 +638,8 @@ struct ResultsContent: View {
 
                         // Event Scores
                         VStack(spacing: 12) {
-                            Text("EVENT BREAKDOWN")
-                                .font(.system(size: 12, weight: .bold))
+                            Text("EVENT SCORES")
+                                .font(.system(size: 14, weight: .bold))
                                 .tracking(1)
                                 .foregroundColor(.armyGold)
 
@@ -1098,17 +1115,13 @@ struct EventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventScore.eventName.uppercased())
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
                 Text(formattedRawValue)
                     .font(.system(size: 14))
                     .foregroundColor(.white.opacity(0.5))
             }
             Spacer()
-            Text("min 60")
-                .font(.system(size: 11))
-                .foregroundColor(.white.opacity(0.4))
-                .padding(.trailing, 12)
             Text("\(eventScore.points)")
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(scoreColor)
@@ -1134,7 +1147,7 @@ struct ExemptEventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(eventName.uppercased())
-                    .font(.system(size: 12, weight: .bold))
+                    .font(.system(size: 14, weight: .bold))
                     .foregroundColor(.white)
                 Text("Exempt")
                     .font(.system(size: 14))
