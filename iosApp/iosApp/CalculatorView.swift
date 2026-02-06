@@ -158,8 +158,8 @@ struct CalculatorView: View {
 
     // Minimum passing values (60 points)
     private var minDeadlift: String {
-        // Find minimum weight for 60 points
-        for weight in stride(from: 140, through: 340, by: 10) {
+        // Find minimum weight for 60 points (female tables go as low as 120 for 60 pts)
+        for weight in stride(from: 80, through: 350, by: 10) {
             let pts = calculator.calculateSingleEvent(event: .deadlift, rawValue: Double(weight), soldier: soldier).points
             if pts >= 60 { return "\(weight)" }
         }
@@ -167,7 +167,7 @@ struct CalculatorView: View {
     }
 
     private var minPushUps: String {
-        for reps in 10...60 {
+        for reps in 4...62 {
             let pts = calculator.calculateSingleEvent(event: .pushUp, rawValue: Double(reps), soldier: soldier).points
             if pts >= 60 { return "\(reps)" }
         }
@@ -175,8 +175,8 @@ struct CalculatorView: View {
     }
 
     private var maxSDCTime: String {
-        // SDC: lower time is better, find max time for 60 points
-        for secs in stride(from: 180, through: 93, by: -1) {
+        // SDC: lower time is better, find max time for 60 points (female 57-61 can be ~4:48)
+        for secs in stride(from: 350, through: 89, by: -1) {
             let pts = calculator.calculateSingleEvent(event: .sprintDragCarry, rawValue: Double(secs), soldier: soldier).points
             if pts >= 60 {
                 let mins = secs / 60
@@ -188,7 +188,8 @@ struct CalculatorView: View {
     }
 
     private var minPlankTime: String {
-        for secs in 90...240 {
+        // Plank: higher is better (age 37+ minimum for 60 pts is ~1:10)
+        for secs in 40...240 {
             let pts = calculator.calculateSingleEvent(event: .plank, rawValue: Double(secs), soldier: soldier).points
             if pts >= 60 {
                 let mins = secs / 60
@@ -196,12 +197,12 @@ struct CalculatorView: View {
                 return "\(mins):\(String(format: "%02d", sec))"
             }
         }
-        return "1:30"
+        return "1:10"
     }
 
     private var maxRunTime: String {
-        // Run: lower time is better, find max time for 60 points
-        for secs in stride(from: 1260, through: 810, by: -1) {
+        // Run: lower time is better, find max time for 60 points (female 62+ can be ~25:00)
+        for secs in stride(from: 1600, through: 800, by: -1) {
             let pts = calculator.calculateSingleEvent(event: .twoMileRun, rawValue: Double(secs), soldier: soldier).points
             if pts >= 60 {
                 let mins = secs / 60
