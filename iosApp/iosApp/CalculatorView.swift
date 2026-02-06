@@ -1334,24 +1334,44 @@ struct LiveEventInputCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header with title
-            Text(title)
-                .font(.system(size: 12, weight: .bold))
-                .tracking(1)
-                .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
+        VStack(alignment: .leading, spacing: 8) {
+            // Header row: title + exempt toggle
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(size: 12, weight: .bold))
+                        .tracking(1)
+                        .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
 
-            // Alternate option link (only for 2-mile run, when not exempt)
-            if showAlternateOption && !isExempt, let onSwitch = onSwitchToAlternate {
-                Button(action: onSwitch) {
-                    Text("Use Alternate Aerobic Event")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.armyGold)
-                        .underline()
+                    // Alternate option link (only for 2-mile run, when not exempt)
+                    if showAlternateOption && !isExempt, let onSwitch = onSwitchToAlternate {
+                        Button(action: onSwitch) {
+                            Text("Use Alternate Aerobic Event")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(.armyGold)
+                                .underline()
+                        }
+                    }
                 }
+
+                Spacer()
+
+                VStack(spacing: 4) {
+                    Toggle("", isOn: $isExempt)
+                        .labelsHidden()
+                        .scaleEffect(0.75)
+                        .tint(.armyGold)
+                        .frame(height: 24)
+                    Text("EXEMPT")
+                        .font(.system(size: 8, weight: .medium))
+                        .tracking(0.5)
+                        .foregroundColor(.white.opacity(0.5))
+                }
+                .frame(width: 80)
             }
 
-            HStack(spacing: 16) {
+            // Input + Score row
+            HStack(alignment: .top, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     TextField("", text: $value)
                         .keyboardType(keyboardType)
@@ -1359,6 +1379,7 @@ struct LiveEventInputCard: View {
                         .foregroundColor(isExempt ? .white.opacity(0.5) : .white)
                         .disabled(isExempt)
                         .padding()
+                        .frame(height: 52)
                         .background(Color.white.opacity(isExempt ? 0.05 : 0.1))
                         .cornerRadius(8)
                         .overlay(
@@ -1376,22 +1397,12 @@ struct LiveEventInputCard: View {
                         .foregroundColor(.white.opacity(0.5))
                 }
 
-                // Score display + exempt toggle - fixed width column
+                // Score display
                 VStack(spacing: 4) {
-                    Toggle("", isOn: $isExempt)
-                        .labelsHidden()
-                        .scaleEffect(0.6)
-                        .tint(.armyGold)
-                        .frame(height: 20)
-                    Text("EXEMPT")
-                        .font(.system(size: 8, weight: .medium))
-                        .tracking(0.5)
-                        .foregroundColor(.white.opacity(0.5))
-
                     Text(isExempt ? "60" : (points != nil ? "\(points!)" : "--"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(scoreColor)
-                        .frame(width: 64, height: 48)
+                        .frame(width: 64, height: 52)
                         .background(scoreColor.opacity(0.2))
                         .cornerRadius(8)
                         .overlay(

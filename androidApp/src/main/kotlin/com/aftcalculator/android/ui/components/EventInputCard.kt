@@ -159,35 +159,70 @@ fun EventInputCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Header row with event name
-            Text(
-                text = event.displayName.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                color = if (isExempt) Color.White.copy(alpha = 0.5f) else ArmyGold,
-                fontWeight = FontWeight.Bold
-            )
-
-            // Switch to alternate option (only for 2-mile run)
-            if (showAlternateOption && !isExempt) {
-                Spacer(modifier = Modifier.height(4.dp))
-                TextButton(
-                    onClick = onSwitchToAlternate,
-                    modifier = Modifier.align(Alignment.Start)
-                ) {
+            // Header row: event name + exempt toggle
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Use Alternate Aerobic Event",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = ArmyGold,
-                        textDecoration = TextDecoration.Underline
+                        text = event.displayName.uppercase(),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = if (isExempt) Color.White.copy(alpha = 0.5f) else ArmyGold,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    // Switch to alternate option (only for 2-mile run)
+                    if (showAlternateOption && !isExempt) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        TextButton(
+                            onClick = onSwitchToAlternate,
+                            modifier = Modifier.align(Alignment.Start)
+                        ) {
+                            Text(
+                                text = "Use Alternate Aerobic Event",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = ArmyGold,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        }
+                    }
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.width(80.dp)
+                ) {
+                    Switch(
+                        checked = isExempt,
+                        onCheckedChange = { onExemptToggle() },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = ArmyGold,
+                            checkedTrackColor = ArmyGold.copy(alpha = 0.5f),
+                            uncheckedThumbColor = Color.White.copy(alpha = 0.6f),
+                            uncheckedTrackColor = Color.White.copy(alpha = 0.2f)
+                        ),
+                        modifier = Modifier
+                            .height(24.dp)
+                            .scale(0.875f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "EXEMPT",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = Color.White.copy(alpha = 0.5f),
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 0.5.sp
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Input + Score row
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     OutlinedTextField(
@@ -228,43 +263,22 @@ fun EventInputCard(
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                // Score display + exempt toggle - fixed width column
+                // Score display
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.width(80.dp)
                 ) {
-                    Switch(
-                        checked = isExempt,
-                        onCheckedChange = { onExemptToggle() },
-                        colors = SwitchDefaults.colors(
-                            checkedThumbColor = ArmyGold,
-                            checkedTrackColor = ArmyGold.copy(alpha = 0.5f),
-                            uncheckedThumbColor = Color.White.copy(alpha = 0.6f),
-                            uncheckedTrackColor = Color.White.copy(alpha = 0.2f)
-                        ),
-                        modifier = Modifier
-                            .height(20.dp)
-                            .scale(0.7f)
-                    )
-                    Text(
-                        text = "EXEMPT",
-                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
-                        color = Color.White.copy(alpha = 0.5f),
-                        fontWeight = FontWeight.Medium,
-                        letterSpacing = 0.5.sp
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
                     Box(
                         modifier = Modifier
                             .width(64.dp)
+                            .height(56.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(scoreBgColor)
                             .border(
                                 width = 1.dp,
                                 color = scoreColor,
                                 shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
