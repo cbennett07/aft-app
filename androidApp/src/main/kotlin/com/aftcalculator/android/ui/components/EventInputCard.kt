@@ -519,7 +519,8 @@ fun AlternateAerobicCard(
                             text = if (passed) "PASS - Time meets standard" else "FAIL - Exceeds max time",
                             style = MaterialTheme.typography.labelMedium,
                             color = if (passed) PassGreen else FailRed,
-                            fontWeight = FontWeight.Bold
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1
                         )
                     }
                 }

@@ -1285,6 +1285,8 @@ struct AlternateAerobicCard: View {
                         Text(isPassing ? "PASS - Time meets standard" : "FAIL - Exceeds max time")
                             .font(.system(size: 11, weight: .bold))
                             .foregroundColor(isPassing ? .passGreen : .failRed)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                             .padding(.top, 4)
                     }
                 }
