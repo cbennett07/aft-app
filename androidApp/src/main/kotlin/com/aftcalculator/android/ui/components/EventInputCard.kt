@@ -177,13 +177,15 @@ fun EventInputCard(
                         Spacer(modifier = Modifier.height(4.dp))
                         TextButton(
                             onClick = onSwitchToAlternate,
-                            modifier = Modifier.align(Alignment.Start)
+                            modifier = Modifier.align(Alignment.Start),
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text(
-                                text = "Use Alternate Aerobic Event",
-                                style = MaterialTheme.typography.labelSmall,
+                                text = "ALTERNATE AEROBIC EVENT",
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
                                 color = ArmyGold,
-                                textDecoration = TextDecoration.Underline
+                                fontWeight = FontWeight.Medium,
+                                letterSpacing = 0.5.sp
                             )
                         }
                     }
@@ -363,30 +365,61 @@ fun AlternateAerobicCard(
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            // Header
+            // Header row: title + disabled exempt toggle
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = "ALTERNATE AEROBIC EVENT",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = ArmyGold,
-                    fontWeight = FontWeight.Bold
-                )
-
-                TextButton(onClick = onSwitchToStandard) {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Use 2-Mile Run",
-                        style = MaterialTheme.typography.labelSmall,
+                        text = "ALTERNATE AEROBIC EVENT",
+                        style = MaterialTheme.typography.labelMedium,
                         color = ArmyGold,
-                        textDecoration = TextDecoration.Underline
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    TextButton(
+                        onClick = onSwitchToStandard,
+                        contentPadding = PaddingValues(0.dp)
+                    ) {
+                        Text(
+                            text = "2-MILE RUN",
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                            color = ArmyGold,
+                            fontWeight = FontWeight.Medium,
+                            letterSpacing = 0.5.sp
+                        )
+                    }
+                }
+
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.width(80.dp)
+                ) {
+                    Switch(
+                        checked = false,
+                        onCheckedChange = {},
+                        enabled = false,
+                        colors = SwitchDefaults.colors(
+                            disabledUncheckedThumbColor = Color.White.copy(alpha = 0.3f),
+                            disabledUncheckedTrackColor = Color.White.copy(alpha = 0.1f)
+                        ),
+                        modifier = Modifier
+                            .height(24.dp)
+                            .scale(0.875f)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "EXEMPT",
+                        style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                        color = Color.White.copy(alpha = 0.3f),
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 0.5.sp
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Event selector dropdown
             ExposedDropdownMenuBox(
@@ -427,13 +460,13 @@ fun AlternateAerobicCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
+            // Input + Score row
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.Top
             ) {
-                // Time input
                 Column(modifier = Modifier.weight(1f)) {
                     OutlinedTextField(
                         value = timeValue,
@@ -501,14 +534,14 @@ fun AlternateAerobicCard(
                     Box(
                         modifier = Modifier
                             .width(64.dp)
+                            .height(56.dp)
                             .clip(RoundedCornerShape(8.dp))
                             .background(scoreBgColor)
                             .border(
                                 width = 1.dp,
                                 color = scoreColor,
                                 shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(horizontal = 8.dp, vertical = 8.dp),
+                            ),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(

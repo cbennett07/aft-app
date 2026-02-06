@@ -111,6 +111,28 @@ fun ScoreResultCard(
                 color = Color.White.copy(alpha = 0.5f)
             )
 
+            // ABC Exemption
+            val abcExempt = score.totalPoints > 465 && score.eventScores.all { it.points >= 80 }
+            if (abcExempt) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(PassGreen.copy(alpha = 0.2f))
+                        .border(1.dp, PassGreen, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Soldier exempt from ABC standards!",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = PassGreen
+                    )
+                }
+            }
+
             Spacer(modifier = Modifier.height(24.dp))
 
             HorizontalDivider(color = Color.White.copy(alpha = 0.1f))

@@ -603,6 +603,22 @@ struct ResultsContent: View {
                                 .stroke(passedColor, lineWidth: 2)
                         )
 
+                        // ABC Exemption
+                        if score.totalPoints > 465 && score.eventScores.allSatisfy({ $0.points >= 80 }) {
+                            Text("Soldier exempt from ABC standards!")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.passGreen)
+                                .frame(maxWidth: .infinity)
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 12)
+                                .background(Color.passGreen.opacity(0.2))
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.passGreen, lineWidth: 1)
+                                )
+                        }
+
                         // Event Scores
                         VStack(spacing: 12) {
                             Text("EVENT BREAKDOWN")
@@ -1195,22 +1211,38 @@ struct AlternateAerobicCard: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Header with switch back option
-            HStack {
-                Text("ALTERNATE AEROBIC EVENT")
-                    .font(.system(size: 12, weight: .bold))
-                    .tracking(1)
-                    .foregroundColor(.armyGold)
+        VStack(alignment: .leading, spacing: 8) {
+            // Header row: title + disabled exempt toggle
+            HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("ALTERNATE AEROBIC EVENT")
+                        .font(.system(size: 12, weight: .bold))
+                        .tracking(1)
+                        .foregroundColor(.armyGold)
+
+                    Button(action: onSwitchToStandard) {
+                        Text("2-MILE RUN")
+                            .font(.system(size: 8, weight: .medium))
+                            .tracking(0.5)
+                            .foregroundColor(.armyGold)
+                    }
+                }
 
                 Spacer()
 
-                Button(action: onSwitchToStandard) {
-                    Text("Use 2-Mile Run")
-                        .font(.system(size: 11, weight: .medium))
-                        .foregroundColor(.armyGold)
-                        .underline()
+                VStack(spacing: 4) {
+                    Toggle("", isOn: .constant(false))
+                        .labelsHidden()
+                        .scaleEffect(0.75)
+                        .tint(.armyGold)
+                        .frame(height: 24)
+                        .disabled(true)
+                    Text("EXEMPT")
+                        .font(.system(size: 8, weight: .medium))
+                        .tracking(0.5)
+                        .foregroundColor(.white.opacity(0.3))
                 }
+                .frame(width: 80)
             }
 
             // Event selector
@@ -1236,13 +1268,15 @@ struct AlternateAerobicCard: View {
                 )
             }
 
-            HStack(spacing: 16) {
+            // Input + Score row
+            HStack(alignment: .top, spacing: 16) {
                 VStack(alignment: .leading, spacing: 4) {
                     TextField("", text: $timeValue)
                         .keyboardType(.numbersAndPunctuation)
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                         .padding()
+                        .frame(height: 52)
                         .background(Color.white.opacity(0.1))
                         .cornerRadius(8)
                         .overlay(
@@ -1266,11 +1300,12 @@ struct AlternateAerobicCard: View {
                     }
                 }
 
+                // Score display
                 VStack(spacing: 4) {
                     Text(points != nil ? "\(points!)" : "--")
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(scoreColor)
-                        .frame(width: 64, height: 48)
+                        .frame(width: 64, height: 52)
                         .background(scoreColor.opacity(0.2))
                         .cornerRadius(8)
                         .overlay(
@@ -1282,6 +1317,7 @@ struct AlternateAerobicCard: View {
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(.white.opacity(0.5))
                 }
+                .frame(width: 80)
             }
         }
         .padding()
@@ -1346,10 +1382,10 @@ struct LiveEventInputCard: View {
                     // Alternate option link (only for 2-mile run, when not exempt)
                     if showAlternateOption && !isExempt, let onSwitch = onSwitchToAlternate {
                         Button(action: onSwitch) {
-                            Text("Use Alternate Aerobic Event")
-                                .font(.system(size: 11, weight: .medium))
+                            Text("ALTERNATE AEROBIC EVENT")
+                                .font(.system(size: 8, weight: .medium))
+                                .tracking(0.5)
                                 .foregroundColor(.armyGold)
-                                .underline()
                         }
                     }
                 }
