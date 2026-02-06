@@ -128,9 +128,32 @@ fun ScoreResultCard(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            score.eventScores.forEach { eventScore ->
-                // Always use 60 as visual threshold (standard passing score)
-                EventScoreRow(eventScore = eventScore, minRequired = 60)
+            // Show all 5 standard events - exempt ones greyed out
+            val standardEvents = listOf(
+                AftEvent.DEADLIFT,
+                AftEvent.PUSH_UP,
+                AftEvent.SPRINT_DRAG_CARRY,
+                AftEvent.PLANK,
+                AftEvent.TWO_MILE_RUN
+            )
+            val scoresByEvent = score.eventScores.associateBy { it.event }
+
+            standardEvents.forEach { event ->
+                val eventScore = scoresByEvent[event]
+                if (eventScore != null) {
+                    EventScoreRow(eventScore = eventScore, minRequired = 60)
+                } else {
+                    // Check if an alternate aerobic event was used instead of 2MR
+                    val alternateScore = if (event == AftEvent.TWO_MILE_RUN) {
+                        score.eventScores.firstOrNull { it.event.isAlternateAerobic }
+                    } else null
+
+                    if (alternateScore != null) {
+                        EventScoreRow(eventScore = alternateScore, minRequired = 60)
+                    } else {
+                        ExemptEventScoreRow(eventName = event.displayName)
+                    }
+                }
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
@@ -254,6 +277,55 @@ private fun formatRawValue(eventScore: EventScore): String {
             CalculatorViewModel.formatTimeForDisplay(eventScore.rawValue)
         } else {
             "N/A"
+        }
+    }
+}
+
+@Composable
+private fun ExemptEventScoreRow(
+    eventName: String,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White.copy(alpha = 0.03f))
+            .padding(12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = eventName,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = Color.White.copy(alpha = 0.4f)
+            )
+            Text(
+                text = "Profile Exempt",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White.copy(alpha = 0.3f)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .width(64.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(Color.White.copy(alpha = 0.05f))
+                .border(1.dp, Color.White.copy(alpha = 0.15f), RoundedCornerShape(6.dp))
+                .padding(horizontal = 10.dp, vertical = 6.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "60",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White.copy(alpha = 0.3f),
+                textAlign = TextAlign.Center,
+                maxLines = 1
+            )
         }
     }
 }

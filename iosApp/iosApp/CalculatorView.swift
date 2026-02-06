@@ -234,7 +234,7 @@ struct CalculatorView: View {
                         Text("ENTER EVENT SCORES")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(.white)
-                        Text("\(mosCategory.displayName) • \(gender == .male ? "Male" : "Female") • Age \(age)")
+                        Text("\(mosCategory.displayName) • Age \(age)")
                             .font(.system(size: 12))
                             .foregroundColor(.white.opacity(0.6))
                     }
@@ -342,7 +342,7 @@ struct CalculatorView: View {
                         }
 
                         Button(action: calculateScore) {
-                            Text("VIEW RESULTS")
+                            Text("CALCULATE FINAL SCORE")
                                 .font(.system(size: 16, weight: .bold))
                                 .tracking(1)
                                 .foregroundColor(.armyBlack)
@@ -352,6 +352,10 @@ struct CalculatorView: View {
                                 .cornerRadius(8)
                         }
                         .padding(.top, 8)
+
+                        Text("Minimum required: \(mosCategory.minimumTotal) points")
+                            .font(.system(size: 11))
+                            .foregroundColor(.white.opacity(0.5))
 
                         Spacer(minLength: 40)
                     }
@@ -541,7 +545,7 @@ struct ResultsContent: View {
                         Text("AFT RESULTS")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(.white)
-                        Text("\(score.mosCategoryName) • \(score.soldierGender) • Age \(score.soldierAge)")
+                        Text("\(score.mosCategoryName) • Age \(score.soldierAge)")
                             .font(.system(size: 12))
                             .foregroundColor(.white.opacity(0.6))
                     }
@@ -557,16 +561,31 @@ struct ResultsContent: View {
                             Text(score.passed ? "PASS" : "FAIL")
                                 .font(.system(size: 24, weight: .black))
                                 .tracking(4)
-                                .foregroundColor(passedColor)
-
-                            Text("\(score.totalPoints)")
-                                .font(.system(size: 72, weight: .bold))
                                 .foregroundColor(.white)
+                                .padding(.horizontal, 32)
+                                .padding(.vertical, 12)
+                                .background(passedColor)
+                                .cornerRadius(8)
 
-                            Text("TOTAL POINTS")
-                                .font(.system(size: 12, weight: .bold))
-                                .tracking(2)
-                                .foregroundColor(.white.opacity(0.6))
+                            // Total Score Box
+                            VStack(spacing: 4) {
+                                Text("\(score.totalPoints)")
+                                    .font(.system(size: 72, weight: .bold))
+                                    .foregroundColor(passedColor)
+
+                                Text("TOTAL POINTS")
+                                    .font(.system(size: 12, weight: .bold))
+                                    .tracking(2)
+                                    .foregroundColor(.white.opacity(0.6))
+                            }
+                            .padding(.horizontal, 32)
+                            .padding(.vertical, 16)
+                            .background(passedColor.opacity(0.2))
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(passedColor, lineWidth: 2)
+                            )
 
                             let exemptEvents = 5 - Int32(score.eventScores.count)
                             Text(exemptEvents > 0
@@ -577,33 +596,55 @@ struct ResultsContent: View {
                         }
                         .padding(24)
                         .frame(maxWidth: .infinity)
-                        .background(passedColor.opacity(0.1))
+                        .background(Color.white.opacity(0.05))
                         .cornerRadius(16)
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(passedColor.opacity(0.3), lineWidth: 2)
+                                .stroke(passedColor, lineWidth: 2)
                         )
 
                         // Event Scores
                         VStack(spacing: 12) {
-                            ForEach(score.eventScores, id: \.eventName) { eventScore in
-                                EventScoreRow(eventScore: eventScore)
+                            Text("EVENT BREAKDOWN")
+                                .font(.system(size: 12, weight: .bold))
+                                .tracking(1)
+                                .foregroundColor(.armyGold)
+
+                            let standardEventNames = [
+                                "3 Rep Max Deadlift",
+                                "Hand Release Push-Up",
+                                "Sprint-Drag-Carry",
+                                "Plank",
+                                "2 Mile Run"
+                            ]
+                            let scoresByName = Dictionary(uniqueKeysWithValues: score.eventScores.map { ($0.eventName, $0) })
+                            let alternateAerobicNames = ["2.5-Mile Walk", "5000-Meter Row", "12,000-Meter Bike", "1000-Meter Swim"]
+
+                            ForEach(standardEventNames, id: \.self) { eventName in
+                                if let eventScore = scoresByName[eventName] {
+                                    EventScoreRow(eventScore: eventScore)
+                                } else if eventName == "2 Mile Run",
+                                          let altScore = score.eventScores.first(where: { alternateAerobicNames.contains($0.eventName) }) {
+                                    EventScoreRow(eventScore: altScore)
+                                } else {
+                                    ExemptEventScoreRow(eventName: eventName)
+                                }
                             }
                         }
 
                         // Failure Reasons
                         if !score.failureReasons.isEmpty {
                             VStack(alignment: .leading, spacing: 8) {
-                                Text("FAILURE REASONS")
+                                Text("AREAS FOR IMPROVEMENT")
                                     .font(.system(size: 12, weight: .bold))
                                     .tracking(1)
                                     .foregroundColor(.failRed)
 
                                 ForEach(score.failureReasons, id: \.self) { reason in
                                     HStack(alignment: .top, spacing: 8) {
-                                        Image(systemName: "exclamationmark.triangle.fill")
+                                        Text("\u{2022}")
                                             .foregroundColor(.failRed)
-                                            .font(.system(size: 12))
+                                            .font(.system(size: 14))
                                         Text(reason)
                                             .font(.system(size: 14))
                                             .foregroundColor(.white.opacity(0.8))
@@ -672,13 +713,17 @@ struct ResultsContent: View {
                                 .tracking(1)
                                 .foregroundColor(.armyGold)
 
+                            let exemptCount = 5 - score.eventScores.count
+
                             InfoRow(label: "Category", value: score.mosCategoryName)
                             InfoRow(label: "Minimum per event", value: "60 points")
-                            InfoRow(label: "Events taken", value: "\(score.eventScores.count)")
-
+                            InfoRow(
+                                label: "Events taken",
+                                value: exemptCount > 0
+                                    ? "\(score.eventScores.count) (\(exemptCount) exempt)"
+                                    : "\(score.eventScores.count)"
+                            )
                             InfoRow(label: "Minimum total", value: "\(score.mosCategoryMinimum) points")
-
-                            InfoRow(label: "Gender", value: score.soldierGender)
                             InfoRow(label: "Age bracket", value: score.soldierAgeBracketName)
                             InfoRow(label: "Scoring type", value: score.isCombatMos ? "Gender-neutral" : "Gender and age-normed")
                         }
@@ -1044,21 +1089,57 @@ struct EventScoreRow: View {
                     .foregroundColor(.white.opacity(0.5))
             }
             Spacer()
+            Text("min 60")
+                .font(.system(size: 11))
+                .foregroundColor(.white.opacity(0.4))
+                .padding(.trailing, 12)
             Text("\(eventScore.points)")
                 .font(.system(size: 24, weight: .bold))
                 .foregroundColor(scoreColor)
-                .frame(width: 56)
+                .frame(width: 64)
                 .padding(.vertical, 8)
                 .background(scoreColor.opacity(0.2))
                 .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(scoreColor, lineWidth: 1)
+                )
         }
-        .padding()
-        .background(Color.white.opacity(0.05))
-        .cornerRadius(12)
-        .overlay(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(Color.white.opacity(0.1), lineWidth: 1)
-        )
+        .padding(12)
+        .background(Color.white.opacity(0.03))
+        .cornerRadius(8)
+    }
+}
+
+struct ExemptEventScoreRow: View {
+    let eventName: String
+
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(eventName.uppercased())
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(.white.opacity(0.4))
+                Text("Profile Exempt")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.3))
+            }
+            Spacer()
+            Text("60")
+                .font(.system(size: 24, weight: .bold))
+                .foregroundColor(.white.opacity(0.3))
+                .frame(width: 64)
+                .padding(.vertical, 8)
+                .background(Color.white.opacity(0.05))
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.white.opacity(0.15), lineWidth: 1)
+                )
+        }
+        .padding(12)
+        .background(Color.white.opacity(0.03))
+        .cornerRadius(8)
     }
 }
 

@@ -240,16 +240,19 @@ fun ResultsScreen(
 
                         Spacer(modifier = Modifier.height(12.dp))
 
-                        val fullMinimum = score.soldier.mosCategory.minimumTotal
-                        val minimumTotal = if (score.eventScores.size < 5) {
-                            (fullMinimum * score.eventScores.size) / 5
-                        } else {
-                            fullMinimum
-                        }
+                        val minimumTotal = score.soldier.mosCategory.minimumTotal
+                        val exemptCount = 5 - score.eventScores.size
 
                         InfoRow(label = "Category", value = score.soldier.mosCategory.displayName)
                         InfoRow(label = "Minimum per event", value = "60 points")
-                        InfoRow(label = "Events taken", value = "${score.eventScores.size}")
+                        InfoRow(
+                            label = "Events taken",
+                            value = if (exemptCount > 0) {
+                                "${score.eventScores.size} ($exemptCount exempt)"
+                            } else {
+                                "${score.eventScores.size}"
+                            }
+                        )
                         InfoRow(label = "Minimum total", value = "$minimumTotal points")
                         InfoRow(label = "Age bracket", value = score.soldier.ageBracket.displayName)
                         InfoRow(
