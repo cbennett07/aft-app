@@ -206,7 +206,7 @@ fun CalculatorScreen(
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "${enteredEvents + exemptCount} of 5 events ($exemptCount exempt)",
+                                    text = "5 events ($exemptCount exempt)",
                                     style = MaterialTheme.typography.labelSmall,
                                     color = Color.White.copy(alpha = 0.5f)
                                 )

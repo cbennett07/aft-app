@@ -270,7 +270,7 @@ struct CalculatorView: View {
                                         .font(.system(size: 14, weight: .bold))
                                         .tracking(1)
                                         .foregroundColor(.armyGold)
-                                    Text("\(eventCount + exemptCount) of 5 events (\(exemptCount) exempt)")
+                                    Text("5 events (\(exemptCount) exempt)")
                                         .font(.system(size: 11))
                                         .foregroundColor(.white.opacity(0.5))
                                 }
