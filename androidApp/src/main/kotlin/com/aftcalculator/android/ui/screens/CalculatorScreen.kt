@@ -199,7 +199,7 @@ fun CalculatorScreen(
                             Column {
                                 Text(
                                     text = "RUNNING TOTAL",
-                                    style = MaterialTheme.typography.titleSmall,
+                                    style = MaterialTheme.typography.titleSmall.copy(fontSize = 16.sp),
                                     color = ArmyGold,
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = 1.sp
@@ -339,7 +339,7 @@ fun CalculatorScreen(
                 ) {
                     Text(
                         text = "CALCULATE FINAL SCORE",
-                        style = MaterialTheme.typography.titleMedium,
+                        style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 1.sp
                     )
