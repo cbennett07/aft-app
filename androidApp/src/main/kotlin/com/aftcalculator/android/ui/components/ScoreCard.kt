@@ -218,25 +218,35 @@ private fun EventScoreRow(
             )
         }
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(80.dp)
+        ) {
             Box(
                 modifier = Modifier
                     .width(64.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
                     .background(scoreBgColor)
-                    .border(1.dp, scoreColor, RoundedCornerShape(6.dp))
-                    .padding(horizontal = 10.dp, vertical = 6.dp),
+                    .border(1.dp, scoreColor, RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "${eventScore.points}",
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = scoreColor,
                     textAlign = TextAlign.Center,
                     maxLines = 1
                 )
             }
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "POINTS",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White.copy(alpha = 0.5f),
+                fontWeight = FontWeight.Medium
+            )
         }
     }
 }
@@ -291,22 +301,34 @@ private fun ExemptEventScoreRow(
             )
         }
 
-        Box(
-            modifier = Modifier
-                .width(64.dp)
-                .clip(RoundedCornerShape(6.dp))
-                .background(Color.White.copy(alpha = 0.05f))
-                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(6.dp))
-                .padding(horizontal = 10.dp, vertical = 6.dp),
-            contentAlignment = Alignment.Center
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.width(80.dp)
         ) {
+            Box(
+                modifier = Modifier
+                    .width(64.dp)
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color.White.copy(alpha = 0.05f))
+                    .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(8.dp)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "60",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White.copy(alpha = 0.7f),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
+                )
+            }
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "60",
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-                color = Color.White.copy(alpha = 0.7f),
-                textAlign = TextAlign.Center,
-                maxLines = 1
+                text = "POINTS",
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.White.copy(alpha = 0.5f),
+                fontWeight = FontWeight.Medium
             )
         }
     }

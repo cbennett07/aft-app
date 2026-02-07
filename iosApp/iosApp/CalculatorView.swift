@@ -1097,17 +1097,22 @@ struct EventScoreRow: View {
                     .foregroundColor(.white.opacity(0.5))
             }
             Spacer()
-            Text("\(eventScore.points)")
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(scoreColor)
-                .frame(width: 64)
-                .padding(.vertical, 8)
-                .background(scoreColor.opacity(0.2))
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(scoreColor, lineWidth: 1)
-                )
+            VStack(spacing: 4) {
+                Text("\(eventScore.points)")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(scoreColor)
+                    .frame(width: 64, height: 52)
+                    .background(scoreColor.opacity(0.2))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(scoreColor, lineWidth: 1)
+                    )
+                Text("POINTS")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(.white.opacity(0.5))
+            }
+            .frame(width: 80)
         }
         .padding(12)
         .background(Color.white.opacity(0.03))
@@ -1130,17 +1135,22 @@ struct ExemptEventScoreRow: View {
                     .foregroundColor(.white.opacity(0.5))
             }
             Spacer()
-            Text("60")
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(.white.opacity(0.7))
-                .frame(width: 64)
-                .padding(.vertical, 8)
-                .background(Color.white.opacity(0.05))
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 1)
-                )
+            VStack(spacing: 4) {
+                Text("60")
+                    .font(.system(size: 28, weight: .bold))
+                    .foregroundColor(.white.opacity(0.7))
+                    .frame(width: 64, height: 52)
+                    .background(Color.white.opacity(0.05))
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.white.opacity(0.2), lineWidth: 1)
+                    )
+                Text("POINTS")
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundColor(.white.opacity(0.5))
+            }
+            .frame(width: 80)
         }
         .padding(12)
         .background(Color.white.opacity(0.03))
