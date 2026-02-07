@@ -143,7 +143,7 @@ fun ScoreResultCard(
             Text(
                 text = "EVENT SCORES",
                 style = MaterialTheme.typography.titleMedium,
-                color = ArmyGold,
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = 1.sp
             )
@@ -204,11 +204,13 @@ private fun EventScoreRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = eventScore.event.displayName,
+                text = eventScore.event.displayName.uppercase(),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = ArmyGold
+                color = ArmyGold,
+                letterSpacing = 1.sp
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = formatRawValue(eventScore),
                 style = MaterialTheme.typography.labelSmall,
@@ -275,11 +277,13 @@ private fun ExemptEventScoreRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = eventName,
+                text = eventName.uppercase(),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = ArmyGold.copy(alpha = 0.5f)
+                color = ArmyGold.copy(alpha = 0.5f),
+                letterSpacing = 1.sp
             )
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = "Exempt",
                 style = MaterialTheme.typography.labelSmall,

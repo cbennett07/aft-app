@@ -643,7 +643,7 @@ struct ResultsContent: View {
                             Text("EVENT SCORES")
                                 .font(.system(size: 18, weight: .bold))
                                 .tracking(1)
-                                .foregroundColor(.armyGold)
+                                .foregroundColor(.white)
 
                             let standardEventNames = [
                                 "3 Rep Max Deadlift",
@@ -1087,7 +1087,7 @@ struct EventScoreRow: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(eventScore.eventName.uppercased())
                     .font(.system(size: 14, weight: .bold))
                     .tracking(1)
@@ -1120,7 +1120,7 @@ struct ExemptEventScoreRow: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text(eventName.uppercased())
                     .font(.system(size: 14, weight: .bold))
                     .tracking(1)
