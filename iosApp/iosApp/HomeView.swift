@@ -97,13 +97,13 @@ struct HomeView: View {
                                 VStack(spacing: 8) {
                                     MosCategoryButton(
                                         title: "COMBAT MOS",
-                                        subtitle: "Min: 60/event \u{2022} 350 total",
+                                        subtitle: "Minimum score: 350",
                                         isSelected: selectedMosCategory == .combat,
                                         action: { selectedMosCategory = .combat }
                                     )
                                     MosCategoryButton(
                                         title: "COMBAT-ENABLING MOS",
-                                        subtitle: "Min: 60/event \u{2022} 300 total",
+                                        subtitle: "Minimum score: 300",
                                         isSelected: selectedMosCategory == .combatEnabling,
                                         action: { selectedMosCategory = .combatEnabling }
                                     )

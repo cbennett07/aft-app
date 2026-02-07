@@ -282,7 +282,7 @@ private fun MosCategoryCard(
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Min: ${category.minimumPerEvent}/event • ${category.minimumTotal} total",
+                text = "Minimum score: ${category.minimumTotal}",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White.copy(alpha = 0.6f)
             )
