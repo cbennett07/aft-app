@@ -671,7 +671,7 @@ struct ResultsContent: View {
                         // Generate Form 705 Button
                         Button(action: { showForm705Dialog = true }) {
                             Text("GENERATE DA FORM 705")
-                                .font(.system(size: 14, weight: .bold))
+                                .font(.system(size: 16, weight: .bold))
                                 .tracking(0.5)
                                 .foregroundColor(.armyGold)
                                 .frame(maxWidth: .infinity)
@@ -688,7 +688,7 @@ struct ResultsContent: View {
                         HStack(spacing: 12) {
                             Button(action: onEditScores) {
                                 Text("EDIT SCORES")
-                                    .font(.system(size: 14, weight: .bold))
+                                    .font(.system(size: 16, weight: .bold))
                                     .tracking(0.5)
                                     .foregroundColor(.white)
                                     .frame(maxWidth: .infinity)
@@ -703,7 +703,7 @@ struct ResultsContent: View {
 
                             Button(action: onStartOver) {
                                 Text("START OVER")
-                                    .font(.system(size: 14, weight: .bold))
+                                    .font(.system(size: 16, weight: .bold))
                                     .tracking(0.5)
                                     .foregroundColor(.armyBlack)
                                     .frame(maxWidth: .infinity)
@@ -1088,8 +1088,7 @@ struct EventScoreRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
-                Text(eventScore.eventName.uppercased()
-                    .replacingOccurrences(of: "SPRINT-DRAG-CARRY", with: "SPRINT-DRAG-\nCARRY"))
+                Text(eventScore.eventName.uppercased())
                     .font(.system(size: 16, weight: .bold))
                     .tracking(1)
                     .foregroundColor(.armyGold)
@@ -1222,8 +1221,9 @@ struct AlternateAerobicCard: View {
 
                     Button(action: onSwitchToStandard) {
                         Text("2-MILE RUN")
-                            .font(.system(size: 8, weight: .medium))
+                            .font(.system(size: 12, weight: .medium))
                             .tracking(0.5)
+                            .underline()
                             .foregroundColor(.armyGold)
                     }
                 }
@@ -1385,8 +1385,9 @@ struct LiveEventInputCard: View {
                     if showAlternateOption && !isExempt, let onSwitch = onSwitchToAlternate {
                         Button(action: onSwitch) {
                             Text("ALTERNATE AEROBIC EVENT")
-                                .font(.system(size: 8, weight: .medium))
+                                .font(.system(size: 12, weight: .medium))
                                 .tracking(0.5)
+                                .underline()
                                 .foregroundColor(.armyGold)
                         }
                     }
