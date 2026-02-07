@@ -1090,7 +1090,7 @@ struct EventScoreRow: View {
             VStack(alignment: .leading, spacing: 6) {
                 Text(eventScore.eventName.uppercased()
                     .replacingOccurrences(of: "SPRINT-DRAG-CARRY", with: "SPRINT-DRAG-\nCARRY"))
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .tracking(1)
                     .foregroundColor(.armyGold)
                 Text(formattedRawValue)
@@ -1128,7 +1128,7 @@ struct ExemptEventScoreRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
                 Text(eventName.uppercased())
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .tracking(1)
                     .foregroundColor(.armyGold.opacity(0.5))
                 Text("Exempt")
@@ -1216,7 +1216,7 @@ struct AlternateAerobicCard: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("ALTERNATE AEROBIC EVENT")
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .tracking(1)
                         .foregroundColor(.armyGold)
 
@@ -1377,7 +1377,7 @@ struct LiveEventInputCard: View {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(.system(size: 16, weight: .bold))
                         .tracking(1)
                         .foregroundColor(isExempt ? .white.opacity(0.5) : .armyGold)
 
