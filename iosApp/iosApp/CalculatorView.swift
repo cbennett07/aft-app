@@ -1088,7 +1088,8 @@ struct EventScoreRow: View {
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 6) {
-                Text(eventScore.eventName.uppercased())
+                Text(eventScore.eventName.uppercased()
+                    .replacingOccurrences(of: "SPRINT-DRAG-CARRY", with: "SPRINT-DRAG-\nCARRY"))
                     .font(.system(size: 14, weight: .bold))
                     .tracking(1)
                     .foregroundColor(.armyGold)

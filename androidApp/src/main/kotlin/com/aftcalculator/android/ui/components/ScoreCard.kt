@@ -204,7 +204,8 @@ private fun EventScoreRow(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = eventScore.event.displayName.uppercase(),
+                text = eventScore.event.displayName.uppercase()
+                    .replace("SPRINT-DRAG-CARRY", "SPRINT-DRAG-\nCARRY"),
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
                 color = ArmyGold,
