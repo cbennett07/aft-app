@@ -182,10 +182,11 @@ fun EventInputCard(
                         ) {
                             Text(
                                 text = "ALTERNATE AEROBIC EVENT",
-                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                                style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                                 color = ArmyGold,
                                 fontWeight = FontWeight.Medium,
-                                letterSpacing = 0.5.sp
+                                letterSpacing = 0.5.sp,
+                                textDecoration = TextDecoration.Underline
                             )
                         }
                     }
@@ -384,10 +385,11 @@ fun AlternateAerobicCard(
                     ) {
                         Text(
                             text = "2-MILE RUN",
-                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 9.sp),
+                            style = MaterialTheme.typography.labelSmall.copy(fontSize = 11.sp),
                             color = ArmyGold,
                             fontWeight = FontWeight.Medium,
-                            letterSpacing = 0.5.sp
+                            letterSpacing = 0.5.sp,
+                            textDecoration = TextDecoration.Underline
                         )
                     }
                 }
